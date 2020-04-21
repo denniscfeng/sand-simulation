@@ -10,6 +10,10 @@ public class ParticleGrid {
         this.grid = new Particle[numRows][numCols];
     }
 
+    public void clear() {
+        grid = new Particle[numRows][numCols];
+    }
+
     void set(int row, int col, Particle particle) {
         grid[row][col] = particle;
     }
