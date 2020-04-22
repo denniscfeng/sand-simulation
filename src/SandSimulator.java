@@ -1,6 +1,5 @@
-import java.awt.*;
+//import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class SandSimulator {
@@ -10,7 +9,9 @@ public class SandSimulator {
         int numRows = 200;
         int numCols = 200;
 
-        ParticleGrid particleGrid = new ParticleGrid(numRows, numCols);
+        Random random = new Random();
+
+        ParticleGrid particleGrid = new ParticleGrid(numRows, numCols, random);
         ArrayList<Particle> particleList = new ArrayList<>();
 
         SandDisplayPanel sandDisplayPanel = new SandDisplayPanel(particleGrid, particleList);
@@ -40,7 +41,7 @@ public class SandSimulator {
 
             if (mouse != null) {
                 if (tool == 1) { // SAND
-                    particleList.addAll(spawnParticles(mouse[0], mouse[1], particleGrid));
+                    particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleGrid));
                 }
             }
 
@@ -71,18 +72,4 @@ public class SandSimulator {
         }
     }
 
-    // Spawn multiple particles given a single (x, y) pixel
-    private static List<Particle> spawnParticles(int x, int y, ParticleGrid grid) {
-        List<Particle> result = new ArrayList<>();
-        Random r = new Random();
-        for (int i = -3; i < 3; i++)
-            for (int j = -3; j < 3; j++) {
-                int row = Math.min(grid.numRows - 1, Math.max(0, x + i));
-                int col = Math.min(grid.numCols - 1, Math.max(0, y + j));
-                Particle temp = new Particle(row, col, Color.yellow, grid, r);
-                result.add(temp);
-            }
-
-        return result;
-    }
 }

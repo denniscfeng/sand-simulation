@@ -45,14 +45,14 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         }
     }
 
-    public void clearDisplay() {
+    void clearDisplay() {
         image = new BufferedImage(particleGrid.numCols * cellSize, particleGrid.numRows * cellSize, BufferedImage.TYPE_INT_RGB);
     }
 
-    public int getTool() {
+    int getTool() {
         return tool;
     }
-    public void setTool(int newTool) {
+    void setTool(int newTool) {
         tool = newTool;
     }
 
@@ -69,7 +69,7 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         return loc;
     }
 
-    public int[] getMouseCoords() {
+    int[] getMouseCoords() {
         return mouse;
     }
 
