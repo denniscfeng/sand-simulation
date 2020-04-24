@@ -1,4 +1,4 @@
-//import java.awt.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -6,8 +6,8 @@ public class SandSimulator {
 
     public static void main(String[] args) {
 
-        int numRows = 200;
-        int numCols = 200;
+        int numRows = 300;
+        int numCols = 300;
 
         Random random = new Random();
 
@@ -17,16 +17,14 @@ public class SandSimulator {
         SandDisplayPanel sandDisplayPanel = new SandDisplayPanel(particleGrid, particleList);
         SandSimulatorGUI sandSimulatorGUI = new SandSimulatorGUI(sandDisplayPanel);
 
-        /*
-        Random random = new Random();
+        Random r = new Random();
         int numTestParticles = 20000;
         for (int i = 0; i<numTestParticles; i++) {
             int rCol = (int) Math.min(numCols - 1, Math.max(0, numCols * (0.1 * random.nextGaussian() + 0.5)));
             int rRow = random.nextInt(numRows);
-            Particle particle = new Particle(rRow, rCol, Color.cyan, particleGrid, random);
+            Particle particle = new Particle(rRow, rCol, Color.YELLOW, particleGrid, r);
             particleList.add(particle);
         }
-         */
 
         // probably need TimerTask for this
         int fps = 60;
@@ -48,12 +46,9 @@ public class SandSimulator {
             if (tool == 0) {
                 particleGrid.clear();
                 particleList.clear();
-                sandDisplayPanel.clearDisplay();
-            } else {
-                sandDisplayPanel.drawParticles();
             }
 
-            sandDisplayPanel.repaint();
+            sandDisplayPanel.display();
 
             for (Particle particle : particleList)
                 particle.simulate();
