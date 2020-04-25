@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.Random;
 
-public class Particle {
+public abstract class Particle {
 
     int row;
     int col;
@@ -22,43 +22,10 @@ public class Particle {
         particleGrid.set(row, col, this);
     }
 
-    void simulate() {
+    public abstract void simulate();
 
-        int rowNext = row;
-        int colNext = col;
+    public abstract void interact(Particle p);
 
-        if (row + 1 < particleGrid.numRows) {
-            if (particleGrid.get(row + 1, col) != null) {
-                int colLeft = col - 1;
-                int colRight = col + 1;
-                if (colLeft >= 0 && particleGrid.get(row + 1, colLeft) == null) {
-                    rowNext = row + 1;
-                    if (colRight < particleGrid.numCols && particleGrid.get(row + 1, colRight) == null) {
-                        colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
-                    } else {
-                        colNext = colLeft;
-                    }
-                } else if (colRight < particleGrid.numCols && particleGrid.get(row + 1, colRight) == null) {
-                    rowNext = row + 1;
-                    colNext = colRight;
-                } else {
-                    rowNext = row;
-                }
-            } else {
-                rowNext = row + 1;
-            }
-        } else {
-            rowNext = row;
-        }
-
-        rowLast = row;
-        colLast = col;
-        particleGrid.set(row, col, null);
-
-        row = rowNext;
-        col = colNext;
-        particleGrid.set(row, col, this);
-
-    }
+    // Add any other abstract methods that may be necessary belowZ
 
 }

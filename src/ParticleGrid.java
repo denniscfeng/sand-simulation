@@ -35,7 +35,7 @@ public class ParticleGrid {
             for (int j = -3; j < 3; j++) {
                 int row = Math.min(grid.numRows - 1, Math.max(0, x + i));
                 int col = Math.min(grid.numCols - 1, Math.max(0, y + j));
-                Particle temp = new Particle(row, col, Color.yellow, grid, random);
+                Particle temp = new SandParticle(row, col, Color.yellow, grid, random);
                 result.add(temp);
             }
         return result;
