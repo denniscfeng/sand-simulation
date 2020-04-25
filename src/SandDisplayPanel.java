@@ -45,6 +45,7 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         this.add(glcanvas);
 //        this.setPreferredSize(dims);
         this.setSize(dims);
+
     }
 
     private void setColor(GL2 gl, int row, int col, Color color) {
@@ -130,6 +131,12 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
     public void display(GLAutoDrawable drawable) {
         final GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
+
+        // Solving High-DPI issue
+        double dpiScalingFactor = ((Graphics2D) getGraphics()).getTransform().getScaleX();
+        int viewWidth = (int) (particleGrid.numCols * cellSize * dpiScalingFactor);
+        int viewHeight = (int) (particleGrid.numCols * cellSize * dpiScalingFactor);
+        gl.glViewport(0, 0, viewWidth, viewHeight);
 
         for (Particle particle : particleList) {
             setColor(gl, particle.row, particle.col, particle.color);
