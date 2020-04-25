@@ -26,23 +26,25 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
     public SandDisplayPanel(ParticleGrid particleGrid, ArrayList<Particle> particleList) {
         this.particleGrid = particleGrid;
         this.particleList = particleList;
-        this.cellSize = Math.max(1, 600 / Math.max(particleGrid.numRows, particleGrid.numCols));
 
+        cellSize = Math.max(1, 600 / Math.max(particleGrid.numRows, particleGrid.numCols));
         scaleX = 2f / particleGrid.numCols;
         scaleY = 2f / particleGrid.numRows;
         profile = GLProfile.get(GLProfile.GL2);
         capabilities = new GLCapabilities(profile);
+        Dimension dims = new Dimension(particleGrid.numCols * cellSize, particleGrid.numRows * cellSize);
 
         // CANVAS
         glcanvas = new GLCanvas(capabilities);
         glcanvas.addGLEventListener(this);
-        glcanvas.setSize(new Dimension(particleGrid.numCols * cellSize, particleGrid.numRows * cellSize));
+        glcanvas.setSize(dims);
         glcanvas.addMouseListener(this);
         glcanvas.addMouseMotionListener(this);
 
         // JFRAME
         this.add(glcanvas);
-        this.setPreferredSize(new Dimension(particleGrid.numCols * cellSize, particleGrid.numRows * cellSize));
+//        this.setPreferredSize(dims);
+        this.setSize(dims);
     }
 
     private void setColor(GL2 gl, int row, int col, Color color) {
@@ -68,7 +70,6 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         tool = newTool;
     }
 
-    // UPDATE
     private int[] toLocation(MouseEvent e) {
         int numRows = particleGrid.numRows;
         int numCols = particleGrid.numCols;
@@ -94,7 +95,6 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("mouse pressed");
         mouse = toLocation(e);
     }
 

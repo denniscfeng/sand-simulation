@@ -28,6 +28,7 @@ public class SandSimulatorGUI implements ActionListener {
 
         List<String> buttonNames = new ArrayList<>();
         buttonNames.add("Clear");
+        buttonNames.add("Erase");
         buttonNames.add("Sand");
         buttons = new JButton[buttonNames.size()];
 
@@ -38,8 +39,8 @@ public class SandSimulatorGUI implements ActionListener {
             buttonPanel.add(buttons[i]);
         }
 
-        buttons[1].setSelected(true);
-        sandDisplayPanel.setTool(1);
+        buttons[2].setSelected(true);
+        sandDisplayPanel.setTool(2);
 
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.pack();
@@ -56,7 +57,7 @@ public class SandSimulatorGUI implements ActionListener {
         for (JButton b: buttons)
             b.setSelected(false);
 
-        if (tool == 1) // Keep Sand selected
+        if (tool != 0) // Keep option selected
             ((JButton) e.getSource()).setSelected(true);
 
     }

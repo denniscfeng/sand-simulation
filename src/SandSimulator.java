@@ -38,8 +38,15 @@ public class SandSimulator {
             int tool = sandDisplayPanel.getTool();
 
             if (mouse != null) {
-                if (tool == 1) { // SAND
-                    particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleGrid));
+                switch (tool) {
+                    case 1: // ERASE
+                        Particle toRemove = particleGrid.get(mouse[0], mouse[1]);
+                        particleList.remove(toRemove);
+                        particleGrid.set(mouse[0], mouse[1], null);
+                        break;
+                    case 2: // SAND
+                        particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleGrid));
+                        break;
                 }
             }
 
