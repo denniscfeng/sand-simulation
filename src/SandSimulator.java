@@ -22,7 +22,7 @@ public class SandSimulator {
         for (int i = 0; i<numTestParticles; i++) {
             int rCol = (int) Math.min(numCols - 1, Math.max(0, numCols * (0.1 * random.nextGaussian() + 0.5)));
             int rRow = random.nextInt(numRows);
-            Particle particle = new Particle(rRow, rCol, Color.YELLOW, particleGrid, r);
+            Particle particle = new SandParticle(rRow, rCol, Color.YELLOW, particleGrid, r);
             particleList.add(particle);
         }
 
