@@ -59,13 +59,16 @@ public class SandParticle extends Particle{
         if (p != null && !(p instanceof SandParticle)) {
 
             if (p instanceof WaterParticle) {
-                p.rowLast = row;
-                this.rowLast = this.row;
-
-                int temp;
-                temp = p.row;
+                int waterRow = p.row;
+                p.rowLast = waterRow;
                 p.row = this.row;
-                this.row = temp;
+
+                this.rowLast = this.row;
+                this.row = waterRow;
+
+                // Need to update particleGrid
+                particleGrid.set(p.row, p.col, p);
+                particleGrid.set(this.row, this.col, this);
             }
         }
         // Check for any special interactions with other particles
