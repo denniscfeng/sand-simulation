@@ -30,6 +30,8 @@ public class SandSimulatorGUI implements ActionListener {
         buttonNames.add("Clear");
         buttonNames.add("Erase");
         buttonNames.add("Sand");
+        buttonNames.add("Water");
+
         buttons = new JButton[buttonNames.size()];
 
         for (int i = 0; i < buttons.length; i++) {

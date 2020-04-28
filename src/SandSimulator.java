@@ -17,14 +17,14 @@ public class SandSimulator {
         SandDisplayPanel sandDisplayPanel = new SandDisplayPanel(particleGrid, particleList);
         SandSimulatorGUI sandSimulatorGUI = new SandSimulatorGUI(sandDisplayPanel);
 
-        Random r = new Random();
-        int numTestParticles = 20000;
-        for (int i = 0; i<numTestParticles; i++) {
-            int rCol = (int) Math.min(numCols - 1, Math.max(0, numCols * (0.1 * random.nextGaussian() + 0.5)));
-            int rRow = random.nextInt(numRows);
-            Particle particle = new SandParticle(rRow, rCol, Color.YELLOW, particleGrid, r);
-            particleList.add(particle);
-        }
+//        Random r = new Random();
+//        int numTestParticles = 20000;
+//        for (int i = 0; i<numTestParticles; i++) {
+//            int rCol = (int) Math.min(numCols - 1, Math.max(0, numCols * (0.1 * random.nextGaussian() + 0.5)));
+//            int rRow = random.nextInt(numRows);
+//            Particle particle = new SandParticle(rRow, rCol, Color.YELLOW, particleGrid, r);
+//            particleList.add(particle);
+//        }
 
         // probably need TimerTask for this
         int fps = 60;
@@ -44,8 +44,12 @@ public class SandSimulator {
                         particleList.remove(toRemove);
                         particleGrid.set(mouse[0], mouse[1], null);
                         break;
+                    // Can combine these in the future
                     case 2: // SAND
-                        particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleGrid));
+                        particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleGrid, tool));
+                        break;
+                    case 3: // WATER
+                        particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleGrid, tool));
                         break;
                 }
             }
