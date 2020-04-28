@@ -1,4 +1,4 @@
-import java.awt.*;
+//import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,16 +17,15 @@ public class SandSimulator {
         SandDisplayPanel sandDisplayPanel = new SandDisplayPanel(particleGrid, particleList);
         SandSimulatorGUI sandSimulatorGUI = new SandSimulatorGUI(sandDisplayPanel);
 
-        Random r = new Random();
-        int numTestParticles = 20000;
-        for (int i = 0; i<numTestParticles; i++) {
-            int rCol = (int) Math.min(numCols - 1, Math.max(0, numCols * (0.1 * random.nextGaussian() + 0.5)));
-            int rRow = random.nextInt(numRows);
-            Particle particle = new SandParticle(rRow, rCol, Color.YELLOW, particleGrid, r);
-            particleList.add(particle);
-        }
+//        Random r = new Random();
+//        int numTestParticles = 20000;
+//        for (int i = 0; i<numTestParticles; i++) {
+//            int rCol = (int) Math.min(numCols - 1, Math.max(0, numCols * (0.1 * random.nextGaussian() + 0.5)));
+//            int rRow = random.nextInt(numRows);
+//            Particle particle = new SandParticle(rRow, rCol, Color.YELLOW, particleGrid, r);
+//            particleList.add(particle);
+//        }
 
-        // probably need TimerTask for this
         int fps = 60;
         double timePerFrame = 1000./fps;
 
@@ -38,15 +37,23 @@ public class SandSimulator {
             int tool = sandDisplayPanel.getTool();
 
             if (mouse != null) {
-                switch (tool) {
-                    case 1: // ERASE
-                        Particle toRemove = particleGrid.get(mouse[0], mouse[1]);
-                        particleList.remove(toRemove);
-                        particleGrid.set(mouse[0], mouse[1], null);
-                        break;
-                    case 2: // SAND
-                        particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleGrid));
-                        break;
+                if (tool == 1) { // ERASE
+
+                    int x = mouse[0];
+                    int y = mouse[1];
+
+                    for (int i = -3; i < 3; i++) {
+                        for (int j = -3; j < 3; j++) {
+                            int row = Math.min(numRows - 1, Math.max(0, x + i));
+                            int col = Math.min(numCols - 1, Math.max(0, y + j));
+                            Particle toRemove = particleGrid.get(row, col);
+                            particleList.remove(toRemove);
+                            particleGrid.set(row, col, null);
+                        }
+                    }
+
+                } else {
+                    particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], tool));
                 }
             }
 
