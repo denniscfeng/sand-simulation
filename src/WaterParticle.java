@@ -1,11 +1,23 @@
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class WaterParticle extends Particle{
 
+    static final List<Color> colors = new ArrayList<>() {{
+        add(new Color(88/256f, 128/256f, 195/256f));
+        add(new Color(90/256f, 131/256f, 198/256f));
+        add(new Color(85/256f, 123/256f, 187/256f));
+    }};
+
     public WaterParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
-        this.color = Color.blue;
+        this.color = createColor();
+    }
+
+    private Color createColor() {
+        return colors.get((row * col) % colors.size());
     }
 
     public void simulate() {

@@ -1,14 +1,19 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SandSimulatorGUI implements ActionListener {
+public class SandSimulatorGUI implements ActionListener, ChangeListener {
 
     JFrame frame;
     SandDisplayPanel sandDisplayPanel;
     JButton[] buttons;
+
+    int tool;
+    int brushWidth;
 
     public SandSimulatorGUI(SandDisplayPanel sandDisplayPanel) {
 
@@ -24,7 +29,6 @@ public class SandSimulatorGUI implements ActionListener {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
         main.add(buttonPanel);
-
 
         List<String> buttonNames = new ArrayList<>();
         buttonNames.add("Clear");
@@ -42,7 +46,20 @@ public class SandSimulatorGUI implements ActionListener {
         }
 
         buttons[2].setSelected(true);
-        sandDisplayPanel.setTool(2);
+        this.tool = 2;
+
+        // Slider
+        this.brushWidth = 5;
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, brushWidth);
+        slider.addChangeListener(this);
+        slider.setMajorTickSpacing(3);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+
+        JLabel label = new JLabel("Brush Width");
+        buttonPanel.add(label);
+        buttonPanel.add(slider);
 
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.pack();
@@ -53,8 +70,7 @@ public class SandSimulatorGUI implements ActionListener {
     // Button handler
     @Override
     public void actionPerformed(ActionEvent e) {
-        int tool = Integer.parseInt(e.getActionCommand());
-        sandDisplayPanel.setTool(tool);
+        setTool(Integer.parseInt(e.getActionCommand()));
 
         for (JButton b: buttons)
             b.setSelected(false);
@@ -63,4 +79,28 @@ public class SandSimulatorGUI implements ActionListener {
             ((JButton) e.getSource()).setSelected(true);
 
     }
+
+    // Slider handler
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        JSlider brushWidth = (JSlider) e.getSource();
+        setBrushWidth(brushWidth.getValue());
+    }
+
+    public int getTool() {
+        return tool;
+    }
+
+    public void setTool(int tool) {
+        this.tool = tool;
+    }
+
+    public int getBrushWidth() {
+        return brushWidth;
+    }
+
+    public void setBrushWidth(int brushWidth) {
+        this.brushWidth = brushWidth;
+    }
+
 }
