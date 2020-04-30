@@ -17,8 +17,6 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
     ArrayList<Particle> particleList;
 
     private int cellSize;
-    private int nums;
-    private int tool;
     private float scaleX;
     private float scaleY;
     int[] mouse;
@@ -62,13 +60,6 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         gl.glVertex2f(end_x, end_y);
         gl.glVertex2f(start_x, end_y);
         gl.glEnd();
-    }
-
-    int getTool() {
-        return tool;
-    }
-    void setTool(int newTool) {
-        tool = newTool;
     }
 
     private int[] toLocation(MouseEvent e) {

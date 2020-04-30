@@ -34,7 +34,8 @@ public class SandSimulator {
             long frameStartTime = System.currentTimeMillis();
 
             int[] mouse = sandDisplayPanel.getMouseCoords();
-            int tool = sandDisplayPanel.getTool();
+            int tool = sandSimulatorGUI.getTool();
+            int brushWidth = sandSimulatorGUI.getBrushWidth();
 
             if (mouse != null) {
                 if (tool == 1) { // ERASE
@@ -42,8 +43,8 @@ public class SandSimulator {
                     int x = mouse[0];
                     int y = mouse[1];
 
-                    for (int i = -3; i < 3; i++) {
-                        for (int j = -3; j < 3; j++) {
+                    for (int i = -brushWidth; i < brushWidth; i++) {
+                        for (int j = -brushWidth; j < brushWidth; j++) {
                             int row = Math.min(numRows - 1, Math.max(0, x + i));
                             int col = Math.min(numCols - 1, Math.max(0, y + j));
                             Particle toRemove = particleGrid.get(row, col);
@@ -53,7 +54,7 @@ public class SandSimulator {
                     }
 
                 } else {
-                    particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], tool));
+                    particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], tool, brushWidth));
                 }
             }
 

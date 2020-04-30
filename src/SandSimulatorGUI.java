@@ -1,14 +1,20 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SandSimulatorGUI implements ActionListener {
+public class SandSimulatorGUI implements ActionListener, ChangeListener {
 
     JFrame frame;
     SandDisplayPanel sandDisplayPanel;
     JButton[] buttons;
+
+    int tool;
+    int brushWidth;
 
     public SandSimulatorGUI(SandDisplayPanel sandDisplayPanel) {
 
@@ -22,9 +28,12 @@ public class SandSimulatorGUI implements ActionListener {
         main.add(sandDisplayPanel);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
+        buttonPanel.setPreferredSize(new Dimension(250, 600));
+        buttonPanel.setLayout(new GridBagLayout());
         main.add(buttonPanel);
 
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(0, 15, 5, 15);
 
         List<String> buttonNames = new ArrayList<>();
         buttonNames.add("Clear");
@@ -38,11 +47,33 @@ public class SandSimulatorGUI implements ActionListener {
             buttons[i] = new JButton(buttonNames.get(i));
             buttons[i].setActionCommand("" + i);
             buttons[i].addActionListener(this);
-            buttonPanel.add(buttons[i]);
+            buttons[i].setPreferredSize(new Dimension(100, 30));
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            buttonPanel.add(buttons[i], gbc);
         }
 
         buttons[2].setSelected(true);
-        sandDisplayPanel.setTool(2);
+        this.tool = 2;
+
+        // Slider
+        this.brushWidth = 5;
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, brushWidth);
+        slider.addChangeListener(this);
+        slider.setMajorTickSpacing(3);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+
+        JLabel label = new JLabel("Brush Width");
+        gbc.insets = new Insets(15, 15, 5, 15);
+        gbc.gridx = 0;
+        gbc.gridy = buttons.length + 1;
+        buttonPanel.add(label, gbc);
+        gbc.insets = new Insets(0, 15, 0, 15);
+        gbc.gridx = 0;
+        gbc.gridy = buttons.length + 2;
+        buttonPanel.add(slider, gbc);
 
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.pack();
@@ -53,8 +84,7 @@ public class SandSimulatorGUI implements ActionListener {
     // Button handler
     @Override
     public void actionPerformed(ActionEvent e) {
-        int tool = Integer.parseInt(e.getActionCommand());
-        sandDisplayPanel.setTool(tool);
+        setTool(Integer.parseInt(e.getActionCommand()));
 
         for (JButton b: buttons)
             b.setSelected(false);
@@ -63,4 +93,28 @@ public class SandSimulatorGUI implements ActionListener {
             ((JButton) e.getSource()).setSelected(true);
 
     }
+
+    // Slider handler
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        JSlider brushWidth = (JSlider) e.getSource();
+        setBrushWidth(brushWidth.getValue());
+    }
+
+    public int getTool() {
+        return tool;
+    }
+
+    public void setTool(int tool) {
+        this.tool = tool;
+    }
+
+    public int getBrushWidth() {
+        return brushWidth;
+    }
+
+    public void setBrushWidth(int brushWidth) {
+        this.brushWidth = brushWidth;
+    }
+
 }
