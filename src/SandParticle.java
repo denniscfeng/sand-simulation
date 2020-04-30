@@ -1,11 +1,10 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class SandParticle extends Particle{
 
-    static final List<Color> colors = new ArrayList<>() {{
+    static final ArrayList<Color> colors = new ArrayList<>() {{
         add(new Color(0.855f, 0.706f, 0.478f));
         add(new Color(0.800f, 0.686f, 0.478f));
         add(new Color(0.855f, 0.720f, 0.500f));

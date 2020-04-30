@@ -17,7 +17,6 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
     ArrayList<Particle> particleList;
 
     private int cellSize;
-    private int nums;
     private float scaleX;
     private float scaleY;
     int[] mouse;

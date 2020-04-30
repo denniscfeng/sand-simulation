@@ -28,10 +28,10 @@ public class ParticleGrid {
     }
 
     // Spawn multiple particles given a single (x, y) pixel
-    ArrayList<Particle> spawnParticles(int x, int y, int tool, int width) {
+    ArrayList<Particle> spawnParticles(int x, int y, int tool, int brushWidth) {
         ArrayList<Particle> result = new ArrayList<>();
-        for (int i = -width; i < width; i++)
-            for (int j = -width; j < width; j++) {
+        for (int i = -brushWidth; i < brushWidth; i++)
+            for (int j = -brushWidth; j < brushWidth; j++) {
                 int row = Math.min(numRows - 1, Math.max(0, x + i));
                 int col = Math.min(numCols - 1, Math.max(0, y + j));
 
