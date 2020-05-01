@@ -23,48 +23,50 @@ public abstract class SolidParticle extends Particle {
     @Override
     public void collide() {
 
+        // If we are not at the bottom
         if (rowNext < particleGrid.numRows) {
 
-            Particle p = particleGrid.get(rowNext, col);
-            if (p != null) {
+            Particle particleUnder = particleGrid.get(rowNext, col);
 
-                // push liquids out of the way, preferring to the sides but able to push water above
-                if (p instanceof LiquidParticle) {
+            // If the cell below is not a solid particle (can be empty), fall down and
+            // push the other particle aside
+            if (!(particleUnder instanceof SolidParticle)) {
 
-                    int pColLeft = p.col - 1;
-                    int pColRight = p.col + 1;
+                pushParticle(particleUnder);
 
-                    if (pColLeft >= 0 && particleGrid.get(p.row, pColLeft) == null) {
-                        if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
-                            p.colNext = (random.nextInt(2) == 0) ? pColLeft : pColRight;
-                        } else {
-                            p.colNext = pColLeft;
-                        }
-                    } else if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
-                        p.colNext = pColRight;
+            } else {
+
+                int colLeft = col - 1;
+                int colRight = col + 1;
+                Particle particleLeft = particleGrid.get(rowNext, colLeft);
+                Particle particleRight = particleGrid.get(rowNext, colRight);
+
+                // Check if the cell to the bottom left is in frame and not a solid particle
+                if (colLeft >= 0 && !(particleLeft instanceof SolidParticle)) {
+
+                    // Check if the cell to the bottom right is in frame and not a solid particle
+                    if (colRight < particleGrid.numCols && !(particleRight instanceof SolidParticle)) {
+
+                        // If so, choose between bottom left and bottom right randomly. Else, choose left
+                        colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
+
+                    // Otherwise, just fall into bottom left
                     } else {
-                        p.rowNext = row;
+                        colNext = colLeft;
                     }
 
-                    p.updatePosition();
+                    // Push the other particle aside
+                    pushParticle(particleGrid.get(rowNext, colNext));
 
+                // If bottom left is full, check cell at bottom right similarly if it contains a SolidParticle or not
+                } else if (colRight < particleGrid.numCols && !(particleRight instanceof SolidParticle)) {
+
+                    colNext = colRight;
+
+                    // Push the other particle aside
+                    pushParticle(particleGrid.get(rowNext, colNext));
                 } else {
-
-                    int colLeft = col - 1;
-                    int colRight = col + 1;
-
-                    if (colLeft >= 0 && particleGrid.get(rowNext, colLeft) == null) {
-                        if (colRight < particleGrid.numCols && particleGrid.get(rowNext, colRight) == null) {
-                            colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
-                        } else {
-                            colNext = colLeft;
-                        }
-                    } else if (colRight < particleGrid.numCols && particleGrid.get(rowNext, colRight) == null) {
-                        colNext = colRight;
-                    } else {
-                        rowNext = row;
-                    }
-
+                    rowNext = row;
                 }
 
             }
@@ -72,6 +74,34 @@ public abstract class SolidParticle extends Particle {
         } else {
             rowNext = row;
         }
+
+    }
+
+    // push liquids and others out of the way, preferring directly to the sides
+    // but able to swap positions as well
+    private void pushParticle(Particle p) {
+
+        if (p == null) {
+            return;
+        }
+
+        int pColLeft = p.col - 1;
+        int pColRight = p.col + 1;
+
+        if (pColLeft >= 0 && particleGrid.get(p.row, pColLeft) == null) {
+            if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
+                p.colNext = (random.nextInt(2) == 0) ? pColLeft : pColRight;
+            } else {
+                p.colNext = pColLeft;
+            }
+        } else if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
+            p.colNext = pColRight;
+        } else {
+            p.rowNext = row;
+            p.colNext = col;
+        }
+
+        p.updatePosition();
 
     }
 
