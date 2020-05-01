@@ -1,10 +1,16 @@
+package particle;
+
+import particle.Particle;
+import particle.SandParticle;
+import particle.WaterParticle;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class ParticleGrid {
 
-    int numRows;
-    int numCols;
+    public int numRows;
+    public int numCols;
     Particle[][] grid;
     Random random;
 
@@ -15,20 +21,20 @@ public class ParticleGrid {
         this.grid = new Particle[numRows][numCols];
     }
 
-    void clear() {
+    public void clear() {
         grid = new Particle[numRows][numCols];
     }
 
-    void set(int row, int col, Particle particle) {
+    public void set(int row, int col, Particle particle) {
         grid[row][col] = particle;
     }
 
-    Particle get(int row, int col) {
+    public Particle get(int row, int col) {
         return grid[row][col];
     }
 
     // Spawn multiple particles given a single (x, y) pixel
-    ArrayList<Particle> spawnParticles(int x, int y, int tool, int brushWidth) {
+    public ArrayList<Particle> spawnParticles(int x, int y, int tool, int brushWidth) {
         ArrayList<Particle> result = new ArrayList<>();
         for (int i = -brushWidth; i < brushWidth; i++)
             for (int j = -brushWidth; j < brushWidth; j++) {

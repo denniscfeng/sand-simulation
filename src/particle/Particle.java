@@ -1,13 +1,15 @@
+package particle;
+
 import java.awt.*;
 import java.util.Random;
 
 public abstract class Particle {
 
-    int row;
-    int col;
+    public int row;
+    public int col;
     int rowLast;
     int colLast;
-    Color color;
+    public Color color;
     ParticleGrid particleGrid;
     Random random;
 
