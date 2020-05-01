@@ -23,34 +23,50 @@ public abstract class SolidParticle extends Particle {
     @Override
     public void collide() {
 
+        // If we are not at the bottom
         if (rowNext < particleGrid.numRows) {
 
-            Particle p = particleGrid.get(rowNext, col);
-            if (p != null) {
+            Particle particleUnder = particleGrid.get(rowNext, col);
 
-                if (p instanceof LiquidParticle) {
+            // If the cell below is not a solid particle (can be empty), fall down and
+            // push the other particle aside
+            if (!(particleUnder instanceof SolidParticle)) {
 
-                    // force liquid particle to getting pushed on top of this particle
-                    p.rowNext = row;
-                    p.updatePosition();
+                pushParticle(particleUnder);
 
-                } else {
+            } else {
 
-                    int colLeft = col - 1;
-                    int colRight = col + 1;
+                int colLeft = col - 1;
+                int colRight = col + 1;
+                Particle particleLeft = particleGrid.get(rowNext, colLeft);
+                Particle particleRight = particleGrid.get(rowNext, colRight);
 
-                    if (colLeft >= 0 && particleGrid.get(rowNext, colLeft) == null) {
-                        if (colRight < particleGrid.numCols && particleGrid.get(rowNext, colRight) == null) {
-                            colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
-                        } else {
-                            colNext = colLeft;
-                        }
-                    } else if (colRight < particleGrid.numCols && particleGrid.get(rowNext, colRight) == null) {
-                        colNext = colRight;
+                // Check if the cell to the bottom left is in frame and not a solid particle
+                if (colLeft >= 0 && !canCollide(particleLeft)) {
+
+                    // Check if the cell to the bottom right is in frame and not a solid particle
+                    if (colRight < particleGrid.numCols && !canCollide(particleRight)) {
+
+                        // If so, choose between bottom left and bottom right randomly. Else, choose left
+                        colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
+
+                        // Otherwise, just fall into bottom left
                     } else {
-                        rowNext = row;
+                        colNext = colLeft;
                     }
 
+                    // Push the other particle aside
+                    pushParticle(particleGrid.get(rowNext, colNext));
+
+                    // If bottom left is full, check cell at bottom right similarly if it contains a SolidParticle or not
+                } else if (colRight < particleGrid.numCols && !canCollide(particleRight)) {
+
+                    colNext = colRight;
+
+                    // Push the other particle aside
+                    pushParticle(particleGrid.get(rowNext, colNext));
+                } else {
+                    rowNext = row;
                 }
 
             }
@@ -60,5 +76,11 @@ public abstract class SolidParticle extends Particle {
         }
 
     }
+
+    @Override
+    public boolean canCollide(Particle p) {
+        return p instanceof SolidParticle;
+    }
+
 
 }
