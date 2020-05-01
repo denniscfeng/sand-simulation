@@ -1,6 +1,6 @@
 package particle;
 
-public enum ParticleType {
+public enum ParticleTool {
 
     _CLEAR,
     _ERASE,

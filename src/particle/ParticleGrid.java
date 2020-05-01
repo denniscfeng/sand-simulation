@@ -30,7 +30,7 @@ public class ParticleGrid {
     }
 
     // Spawn multiple particles given a single (x, y) pixel
-    public ArrayList<Particle> spawnParticles(int x, int y, ParticleType particleType, int brushWidth) {
+    public ArrayList<Particle> spawnParticles(int x, int y, ParticleTool particleTool, int brushWidth) {
         ArrayList<Particle> result = new ArrayList<>();
         for (int i = -brushWidth; i < brushWidth; i++)
             for (int j = -brushWidth; j < brushWidth; j++) {
@@ -40,9 +40,9 @@ public class ParticleGrid {
                 if (get(row, col) == null) {
 
                     Particle temp = null;
-                    if (particleType == ParticleType.SAND) {
+                    if (particleTool == ParticleTool.SAND) {
                         temp = new SandParticle(row, col, this, random);
-                    } else if (particleType == ParticleType.WATER) {
+                    } else if (particleTool == ParticleTool.WATER) {
                         temp = new WaterParticle(row, col, this, random);
                     }
 

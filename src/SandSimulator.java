@@ -1,7 +1,7 @@
 //import java.awt.*;
 import particle.Particle;
 import particle.ParticleGrid;
-import particle.ParticleType;
+import particle.ParticleTool;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -38,11 +38,11 @@ public class SandSimulator {
             long frameStartTime = System.currentTimeMillis();
 
             int[] mouse = sandDisplayPanel.getMouseCoords();
-            ParticleType particleType = sandSimulatorGUI.getParticleType();
+            ParticleTool particleTool = sandSimulatorGUI.getParticleTool();
             int brushWidth = sandSimulatorGUI.getBrushWidth();
 
             if (mouse != null) {
-                if (particleType == ParticleType._ERASE) { // ERASE
+                if (particleTool == ParticleTool._ERASE) { // ERASE
 
                     int x = mouse[0];
                     int y = mouse[1];
@@ -58,11 +58,11 @@ public class SandSimulator {
                     }
 
                 } else {
-                    particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleType, brushWidth));
+                    particleList.addAll(particleGrid.spawnParticles(mouse[0], mouse[1], particleTool, brushWidth));
                 }
             }
 
-            if (particleType == ParticleType._CLEAR) {
+            if (particleTool == ParticleTool._CLEAR) {
                 particleGrid.clear();
                 particleList.clear();
             }

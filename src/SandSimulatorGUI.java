@@ -1,4 +1,4 @@
-import particle.ParticleType;
+import particle.ParticleTool;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -14,7 +14,7 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
     SandDisplayPanel sandDisplayPanel;
     JButton[] buttons;
 
-    ParticleType particleType;
+    ParticleTool particleTool;
     int brushWidth;
 
     public SandSimulatorGUI(SandDisplayPanel sandDisplayPanel) {
@@ -62,7 +62,7 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         }
 
         buttons[2].setSelected(true);
-        this.particleType = ParticleType.SAND;
+        this.particleTool = ParticleTool.SAND;
 
         // Slider
         this.brushWidth = 5;
@@ -92,12 +92,12 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
     // Button handler
     @Override
     public void actionPerformed(ActionEvent e) {
-        setParticleType(e.getActionCommand());
+        setParticleTool(e.getActionCommand());
 
         for (JButton b: buttons)
             b.setSelected(false);
 
-        if (particleType != ParticleType._CLEAR) // Keep option selected
+        if (particleTool != ParticleTool._CLEAR) // Keep option selected
             ((JButton) e.getSource()).setSelected(true);
 
     }
@@ -109,12 +109,12 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         setBrushWidth(brushWidth.getValue());
     }
 
-    public ParticleType getParticleType() {
-        return particleType;
+    public ParticleTool getParticleTool() {
+        return particleTool;
     }
 
-    public void setParticleType(String buttonCommand) {
-        this.particleType = ParticleType.valueOf(buttonCommand);
+    public void setParticleTool(String buttonCommand) {
+        this.particleTool = ParticleTool.valueOf(buttonCommand);
     }
 
     public int getBrushWidth() {
