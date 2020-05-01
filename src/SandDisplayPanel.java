@@ -1,16 +1,14 @@
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
-import particle.Particle;
-import particle.ParticleGrid;
-import particle.SandParticle;
-import particle.WaterParticle;
+import particle.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SandDisplayPanel extends JPanel implements MouseListener, MouseMotionListener, GLEventListener {
 
@@ -26,6 +24,7 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
     private float scaleX;
     private float scaleY;
     int[] mouse;
+
 
     public SandDisplayPanel(ParticleGrid particleGrid, ArrayList<Particle> particleList) {
         this.particleGrid = particleGrid;
@@ -148,49 +147,70 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
     @Override
     public void reshape(GLAutoDrawable drawable, int i, int i1, int i2, int i3) { }
 
-    private void handleFileUpload() {
-        /*
-        Image img;
-        for (int y = 0; y < img.getHeight(); y++) {
-            for (int x = 0; x < img.getWidth(); x++) {
+    public void handleFileUpload(File file) {
+        particleGrid.clear();
+        particleList.clear();
+        BufferedImage img;
+
+        try {
+            img = ImageIO.read(file);
+        } catch (Exception e) {
+            System.out.println("Error with image upload");
+            return;
+        }
+
+        ArrayList<Particle> particles = new ArrayList<>();
+        int width = img.getWidth();
+        int height = img.getHeight();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 int  clr   = img.getRGB(x, y);
-                int  red   = (clr & 0x00ff0000) >> 16;
-                int  green = (clr & 0x0000ff00) >> 8;
-                int  blue  =  clr & 0x000000ff;
-                Color c = new Color(red, green, blue);
-                Particle temp = getClosestParticle(c);
+                int  r = (clr & 0x00ff0000) >> 16;
+                int  g = (clr & 0x0000ff00) >> 8;
+                int  b =  clr & 0x000000ff;
+                int[] coords = getCoordFromImage(x, y, width, height);
+                Particle temp = getClosestParticle(new Color(r, g, b), coords[0], coords[1]);
+                particleGrid.set(coords[0], coords[1], temp);
+                particles.add(temp);
             }
         }
 
-         */
+        particleList.addAll(particles);
     }
 
+    private int[] getCoordFromImage(int x, int y, int width, int height) {
+        int[] result = new int[2];
+        result[0] = particleGrid.numCols * y / height;
+        result[1] = particleGrid.numRows * x / width;
+        return result;
+    }
 
-    private Particle getClosestParticle(Color c) {
+    ArrayList<Color> particleColors = new ArrayList<>() {{
+        add(SandParticle.colors.get(0));
+        add(WaterParticle.colors.get(0));
+    }};
+
+    private Particle getClosestParticle(Color c, int row, int col) {
         double closest = Integer.MAX_VALUE;
-        int type;
-
-        ArrayList<Color> particleColors = new ArrayList<>();
-        particleColors.add(SandParticle.colors.get(0));
-        particleColors.add(WaterParticle.colors.get(0));
+        int particleType = -1;
 
         for (int i = 0; i < particleColors.size(); i++) {
             double diff = colorDistance(c, particleColors.get(i));
             if (diff < closest) {
                 closest = diff;
-                type = i;
+                particleType = i;
             }
         }
 
-        /*
-        switch (type) {
+        switch (particleType) {
             case 0:
-                return new SandParticle(row, col, particleGrid, particleGrid.getRandom);
+                return new SandParticle(row, col, particleGrid, particleGrid.getRandom());
+            case 1:
+                return new WaterParticle(row, col, particleGrid, particleGrid.getRandom());
+            default:
+                return null;
         }
 
-         */
-
-        return new SandParticle(1, 2, particleGrid, null);
 
     }
 

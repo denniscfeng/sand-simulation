@@ -3,6 +3,7 @@ import particle.ParticleTool;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,19 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
 
         this.sandDisplayPanel = sandDisplayPanel;
         main.add(sandDisplayPanel);
+
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem importImage = new JMenuItem("Import Image");
+        importImage.addActionListener((event) -> showFilePopup());
+        JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener((event) -> System.exit(0));
+
+        fileMenu.add(importImage);
+        fileMenu.add(exit);
+        menuBar.add(fileMenu);
+        frame.setJMenuBar(menuBar);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(250, 600));
@@ -123,6 +137,17 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
 
     public void setBrushWidth(int brushWidth) {
         this.brushWidth = brushWidth;
+    }
+
+    public void showFilePopup() {
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "JPG & GIF Images", "jpg", "gif");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(frame);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            sandDisplayPanel.handleFileUpload(chooser.getSelectedFile());
+        }
     }
 
 }

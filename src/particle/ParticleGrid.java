@@ -45,4 +45,8 @@ public class ParticleGrid {
         return result;
     }
 
+    public Random getRandom() {
+        return random;
+    }
+
 }
