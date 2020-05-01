@@ -42,10 +42,10 @@ public abstract class LiquidParticle extends Particle{
                 Particle particleRight = particleGrid.get(rowNext, colRight);
 
                 // Check if the cell to the bottom left is in frame and not a solid particle
-                if (colLeft >= 0 && !(particleLeft instanceof LiquidParticle || particleLeft instanceof SolidParticle)) {
+                if (colLeft >= 0 && !canCollide(particleLeft)) {
 
                     // Check if the cell to the bottom right is in frame and not a solid particle
-                    if (colRight < particleGrid.numCols && !(particleRight instanceof LiquidParticle || particleRight instanceof SolidParticle)) {
+                    if (colRight < particleGrid.numCols && !canCollide(particleRight)) {
 
                         // If so, choose between bottom left and bottom right randomly. Else, choose left
                         colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
@@ -59,7 +59,7 @@ public abstract class LiquidParticle extends Particle{
                     pushParticle(particleGrid.get(rowNext, colNext));
 
                     // If bottom left is full, check cell at bottom right similarly if it contains a SolidParticle or not
-                } else if (colRight < particleGrid.numCols && !(particleRight instanceof LiquidParticle || particleRight instanceof SolidParticle)) {
+                } else if (colRight < particleGrid.numCols && !canCollide(particleRight)) {
 
                     colNext = colRight;
 
@@ -95,4 +95,8 @@ public abstract class LiquidParticle extends Particle{
 
     }
 
+    @Override
+    public boolean canCollide(Particle p) {
+        return p instanceof LiquidParticle || p instanceof SolidParticle;
+    }
 }

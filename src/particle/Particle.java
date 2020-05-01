@@ -26,8 +26,13 @@ public abstract class Particle {
     // run simulation step of the particle, to determine next positions
     public abstract void simulate();
 
-    // used by simulate to check particle collisions, which can result in calling simulate() on other particles
+    // used by simulate to check particle collisions, which can result in calling
+    // simulate() on other particles
     public abstract void collide();
+
+    // used by collide to check if a type of particle can collide with another
+    // (empty space included!), otherwise it can push the other out of the way
+    public abstract boolean canCollide(Particle p);
 
     // updates position based on next positions set by simulate()
     public void updatePosition() {
