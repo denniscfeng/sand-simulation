@@ -36,21 +36,30 @@ public abstract class SolidParticle extends Particle {
 
         if (rowNext < particleGrid.numRows) {
 
-            if (particleGrid.get(rowNext, col) != null) {
+            Particle p = particleGrid.get(rowNext, col);
+            if (p != null) {
 
-                int colLeft = col - 1;
-                int colRight = col + 1;
+                if (p instanceof LiquidParticle) {
 
-                if (colLeft >= 0 && particleGrid.get(rowNext, colLeft) == null) {
-                    if (colRight < particleGrid.numCols && particleGrid.get(rowNext, colRight) == null) {
-                        colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
-                    } else {
-                        colNext = colLeft;
-                    }
-                } else if (colRight < particleGrid.numCols && particleGrid.get(rowNext, colRight) == null) {
-                    colNext = colRight;
+                    p.rowNext = row;
+
                 } else {
-                    rowNext = row;
+
+                    int colLeft = col - 1;
+                    int colRight = col + 1;
+
+                    if (colLeft >= 0 && particleGrid.get(rowNext, colLeft) == null) {
+                        if (colRight < particleGrid.numCols && particleGrid.get(rowNext, colRight) == null) {
+                            colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
+                        } else {
+                            colNext = colLeft;
+                        }
+                    } else if (colRight < particleGrid.numCols && particleGrid.get(rowNext, colRight) == null) {
+                        colNext = colRight;
+                    } else {
+                        rowNext = row;
+                    }
+
                 }
 
             }
