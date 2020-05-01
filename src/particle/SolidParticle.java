@@ -30,7 +30,7 @@ public abstract class SolidParticle extends Particle {
 
             // If the cell below is not a solid particle (can be empty), fall down and
             // push the other particle aside
-            if (!(particleUnder instanceof SolidParticle)) {
+            if (!canCollide(particleUnder)) {
 
                 pushParticle(particleUnder);
 
@@ -79,7 +79,7 @@ public abstract class SolidParticle extends Particle {
 
     @Override
     public boolean canCollide(Particle p) {
-        return p instanceof SolidParticle;
+        return p instanceof SolidParticle || p instanceof StaticParticle;
     }
 
 

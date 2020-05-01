@@ -39,6 +39,7 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         ArrayList<String> buttonNames = new ArrayList<>();
         buttonNames.add("Clear");
         buttonNames.add("Erase");
+        buttonNames.add("Wall");
         buttonNames.add("Sand");
         buttonNames.add("Water");
 
@@ -46,6 +47,7 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         ArrayList<String> buttonCommands = new ArrayList<>();
         buttonCommands.add("_CLEAR");
         buttonCommands.add("_ERASE");
+        buttonCommands.add("WALL");
         buttonCommands.add("SAND");
         buttonCommands.add("WATER");
 

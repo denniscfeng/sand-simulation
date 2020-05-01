@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class WallParticle extends StaticParticle{
+public class WallParticle extends StaticParticle {
 
     static final ArrayList<Color> colors = new ArrayList<>() {{
         add(new Color(153/256f, 153/256f, 153/256f));
