@@ -28,10 +28,24 @@ public abstract class SolidParticle extends Particle {
             Particle p = particleGrid.get(rowNext, col);
             if (p != null) {
 
+                // push liquids out of the way, preferring to the sides but able to push water above
                 if (p instanceof LiquidParticle) {
 
-                    // force liquid particle to getting pushed on top of this particle
-                    p.rowNext = row;
+                    int pColLeft = p.col - 1;
+                    int pColRight = p.col + 1;
+
+                    if (pColLeft >= 0 && particleGrid.get(p.row, pColLeft) == null) {
+                        if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
+                            p.colNext = (random.nextInt(2) == 0) ? pColLeft : pColRight;
+                        } else {
+                            p.colNext = pColLeft;
+                        }
+                    } else if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
+                        p.colNext = pColRight;
+                    } else {
+                        p.rowNext = row;
+                    }
+
                     p.updatePosition();
 
                 } else {
