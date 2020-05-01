@@ -50,7 +50,7 @@ public abstract class SolidParticle extends Particle {
                         // If so, choose between bottom left and bottom right randomly. Else, choose left
                         colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
 
-                    // Otherwise, just fall into bottom left
+                        // Otherwise, just fall into bottom left
                     } else {
                         colNext = colLeft;
                     }
@@ -58,7 +58,7 @@ public abstract class SolidParticle extends Particle {
                     // Push the other particle aside
                     pushParticle(particleGrid.get(rowNext, colNext));
 
-                // If bottom left is full, check cell at bottom right similarly if it contains a SolidParticle or not
+                    // If bottom left is full, check cell at bottom right similarly if it contains a SolidParticle or not
                 } else if (colRight < particleGrid.numCols && !(particleRight instanceof SolidParticle)) {
 
                     colNext = colRight;
@@ -77,32 +77,5 @@ public abstract class SolidParticle extends Particle {
 
     }
 
-    // push liquids and others out of the way, preferring directly to the sides
-    // but able to swap positions as well
-    private void pushParticle(Particle p) {
-
-        if (p == null) {
-            return;
-        }
-
-        int pColLeft = p.col - 1;
-        int pColRight = p.col + 1;
-
-        if (pColLeft >= 0 && particleGrid.get(p.row, pColLeft) == null) {
-            if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
-                p.colNext = (random.nextInt(2) == 0) ? pColLeft : pColRight;
-            } else {
-                p.colNext = pColLeft;
-            }
-        } else if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
-            p.colNext = pColRight;
-        } else {
-            p.rowNext = row;
-            p.colNext = col;
-        }
-
-        p.updatePosition();
-
-    }
 
 }

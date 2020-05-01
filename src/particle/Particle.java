@@ -39,6 +39,29 @@ public abstract class Particle {
         particleGrid.set(row, col, this);
     }
 
+    // push particles (liquids, gasses(?))out of the way, preferring directly to the sides
+    // but able to swap positions as well
+    public void pushParticle(Particle p) {
+        if (p == null) {
+            return;
+        }
+        int pColLeft = p.col - 1;
+        int pColRight = p.col + 1;
+        if (pColLeft >= 0 && particleGrid.get(p.row, pColLeft) == null) {
+            if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
+                p.colNext = (random.nextInt(2) == 0) ? pColLeft : pColRight;
+            } else {
+                p.colNext = pColLeft;
+            }
+        } else if (pColRight < particleGrid.numCols && particleGrid.get(p.row, pColRight) == null) {
+            p.colNext = pColRight;
+        } else {
+            p.rowNext = row;
+            p.colNext = col;
+        }
+        p.updatePosition();
+    }
+
     // used by specific particle types to change properties of other particles
     public abstract void interact(Particle p);
 
