@@ -1,5 +1,7 @@
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
+import particle.Particle;
+import particle.ParticleGrid;
 
 import javax.swing.*;
 import java.awt.*;

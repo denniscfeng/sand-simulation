@@ -1,4 +1,7 @@
 //import java.awt.*;
+import particle.Particle;
+import particle.ParticleGrid;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,7 +25,7 @@ public class SandSimulator {
 //        for (int i = 0; i<numTestParticles; i++) {
 //            int rCol = (int) Math.min(numCols - 1, Math.max(0, numCols * (0.1 * random.nextGaussian() + 0.5)));
 //            int rRow = random.nextInt(numRows);
-//            Particle particle = new SandParticle(rRow, rCol, Color.YELLOW, particleGrid, r);
+//            particle.Particle particle = new particle.SandParticle(rRow, rCol, Color.YELLOW, particleGrid, r);
 //            particleList.add(particle);
 //        }
 
