@@ -38,16 +38,7 @@ public class ParticleGrid {
                 int col = Math.min(numCols - 1, Math.max(0, y + j));
 
                 if (get(row, col) == null) {
-
-                    Particle temp = null;
-                    if (particleTool == ParticleTool.SAND) {
-                        temp = new SandParticle(row, col, this, random);
-                    } else if (particleTool == ParticleTool.WATER) {
-                        temp = new WaterParticle(row, col, this, random);
-                    }
-
-                    result.add(temp);
-
+                    result.add(ParticleFactory.getParticle(row, col, particleTool, this, random));
                 }
 
             }
