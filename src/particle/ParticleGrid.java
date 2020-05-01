@@ -1,9 +1,5 @@
 package particle;
 
-import particle.Particle;
-import particle.SandParticle;
-import particle.WaterParticle;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -34,7 +30,7 @@ public class ParticleGrid {
     }
 
     // Spawn multiple particles given a single (x, y) pixel
-    public ArrayList<Particle> spawnParticles(int x, int y, int tool, int brushWidth) {
+    public ArrayList<Particle> spawnParticles(int x, int y, ParticleType particleType, int brushWidth) {
         ArrayList<Particle> result = new ArrayList<>();
         for (int i = -brushWidth; i < brushWidth; i++)
             for (int j = -brushWidth; j < brushWidth; j++) {
@@ -43,10 +39,10 @@ public class ParticleGrid {
 
                 if (get(row, col) == null) {
 
-                    Particle temp;
-                    if (tool == 2) {
+                    Particle temp = null;
+                    if (particleType == ParticleType.SAND) {
                         temp = new SandParticle(row, col, this, random);
-                    } else {
+                    } else if (particleType == ParticleType.WATER) {
                         temp = new WaterParticle(row, col, this, random);
                     }
 
