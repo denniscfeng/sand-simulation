@@ -4,6 +4,7 @@ import particle.ParticleGrid;
 import particle.ParticleTool;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class SandSimulator {
@@ -68,6 +69,8 @@ public class SandSimulator {
             }
 
             sandDisplayPanel.display();
+
+            Collections.shuffle(particleList);
 
             for (Particle particle : particleList) {
                 particle.simulate();
