@@ -69,8 +69,10 @@ public class SandSimulator {
 
             sandDisplayPanel.display();
 
-            for (Particle particle : particleList)
+            for (Particle particle : particleList) {
                 particle.simulate();
+                particle.updatePosition();
+            }
 
             long frameEndTime = System.currentTimeMillis();
             long frameTimeTaken = frameEndTime - frameStartTime;

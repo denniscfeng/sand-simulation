@@ -21,24 +21,9 @@ public class SandParticle extends SolidParticle{
         return colors.get((row * col) % colors.size());
     }
 
+    @Override
     public void interact(Particle p) {
-//
-//        if (p != null && !(p instanceof SandParticle)) {
-//
-//            if (p instanceof WaterParticle) {
-//                int waterRow = p.row;
-//                p.rowNext = waterRow;
-//                p.row = this.row;
-//
-//                this.rowNext = this.row;
-//                this.row = waterRow;
-//
-//                // Need to update particleGrid
-//                particleGrid.set(p.row, p.col, p);
-//                particleGrid.set(this.row, this.col, this);
-//            }
-//        }
-//        // Check for any special interactions with other particles
+        // Check for any special interactions with other particles
     }
 
 }

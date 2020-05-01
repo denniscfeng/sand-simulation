@@ -8,29 +8,18 @@ public abstract class SolidParticle extends Particle {
         super(row, col, particleGrid, random);
     }
 
-    // run simulation step of the particle, touching other type particles as necessary
     @Override
     public void simulate() {
 
-        // if a particle has not been moved by a collision already, update its next position and run collide
-        if (rowNext == row && colNext == col) {
-            rowNext = row + 1;
-            colNext = col;
-            collide();
-        }
+        // particle prefers to fall
+        rowNext = row + 1;
+        colNext = col;
+        collide();
 
         // somewhere here goes interact()
 
-        // position update
-        particleGrid.set(row, col, null);
-        row = rowNext;
-        col = colNext;
-        particleGrid.set(row, col, this);
-
     }
 
-    // check if particle can move into next position
-    // if particle collides into another particle, modify particles next positions as needed
     @Override
     public void collide() {
 
@@ -41,7 +30,9 @@ public abstract class SolidParticle extends Particle {
 
                 if (p instanceof LiquidParticle) {
 
+                    // force liquid particle to getting pushed on top of this particle
                     p.rowNext = row;
+                    p.updatePosition();
 
                 } else {
 
