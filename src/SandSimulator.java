@@ -31,13 +31,21 @@ public class SandSimulator {
 //            particleList.add(particle);
 //        }
 
+        // Set fps cap
         int fps = 60;
-        double timePerFrame = 1000./fps;
+        double timePerFrame = 1000f/fps;
+
+        // Display avg fps every fpsCountTime ms
+        int fpsCountTime = 5000;
+        long framesCount = 0;
+        long fpsStartTime = System.currentTimeMillis();
 
         while (true) {
 
+            // Start timing frame
             long frameStartTime = System.currentTimeMillis();
 
+            // Mouse input stuff
             int[] mouse = sandDisplayPanel.getMouseCoords();
             ParticleTool particleTool = sandSimulatorGUI.getParticleTool();
             int brushWidth = sandSimulatorGUI.getBrushWidth();
@@ -68,18 +76,24 @@ public class SandSimulator {
                 particleList.clear();
             }
 
+            // Show frame and count
             sandDisplayPanel.display();
+            framesCount += 1;
 
+            // Shuffle particle simulation order
             Collections.shuffle(particleList);
 
+            // Simulate!
             for (Particle particle : particleList) {
                 particle.simulate();
                 particle.updatePosition();
             }
 
+            // End timing frame
             long frameEndTime = System.currentTimeMillis();
             long frameTimeTaken = frameEndTime - frameStartTime;
 
+            // pause simulation if faster than fps
             if (frameTimeTaken < timePerFrame) {
                 try {
                     Thread.sleep((long) timePerFrame - frameTimeTaken);
@@ -88,6 +102,19 @@ public class SandSimulator {
                     throw new RuntimeException(e);
                 }
             }
+
+            // Show fps if its been fpsCountTime
+            long fpsTimeTaken = frameEndTime - fpsStartTime;
+            if (fpsTimeTaken > fpsCountTime) {
+
+                long avgfps = (fpsTimeTaken/framesCount);
+
+                System.out.printf("FPS: %d     Time per frame: %d ms\n", avgfps, 1000/avgfps);
+                fpsStartTime = frameEndTime;
+                framesCount = 0;
+
+            }
+
         }
     }
 
