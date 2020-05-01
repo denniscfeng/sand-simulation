@@ -78,13 +78,18 @@ public class WaterParticle extends Particle{
             rowNext = row;
         }
 
-        rowLast = row;
-        colLast = col;
+        this.rowNext = row;
+        this.colNext = col;
         particleGrid.set(row, col, null);
 
         row = rowNext;
         col = colNext;
         particleGrid.set(row, col, this);
+
+    }
+
+    @Override
+    public void collide() {
 
     }
 

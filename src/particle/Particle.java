@@ -7,8 +7,8 @@ public abstract class Particle {
 
     public int row;
     public int col;
-    int rowLast;
-    int colLast;
+    public int rowNext;
+    public int colNext;
     public Color color;
     ParticleGrid particleGrid;
     Random random;
@@ -16,14 +16,16 @@ public abstract class Particle {
     public Particle(int row, int col, ParticleGrid particleGrid, Random random) {
         this.row = row;
         this.col = col;
-        this.rowLast = row;
-        this.colLast = col;
+        this.rowNext = row;
+        this.colNext = col;
         this.particleGrid = particleGrid;
         this.random = random;
         particleGrid.set(row, col, this);
     }
 
     public abstract void simulate();
+
+    public abstract void collide();
 
     public abstract void interact(Particle p);
 
