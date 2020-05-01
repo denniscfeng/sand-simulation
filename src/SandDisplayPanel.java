@@ -2,11 +2,15 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import particle.Particle;
 import particle.ParticleGrid;
+import particle.SandParticle;
+import particle.WaterParticle;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SandDisplayPanel extends JPanel implements MouseListener, MouseMotionListener, GLEventListener {
 
@@ -143,4 +147,58 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
 
     @Override
     public void reshape(GLAutoDrawable drawable, int i, int i1, int i2, int i3) { }
+
+    private void handleFileUpload() {
+        /*
+        Image img;
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                int  clr   = img.getRGB(x, y);
+                int  red   = (clr & 0x00ff0000) >> 16;
+                int  green = (clr & 0x0000ff00) >> 8;
+                int  blue  =  clr & 0x000000ff;
+                Color c = new Color(red, green, blue);
+                Particle temp = getClosestParticle(c);
+            }
+        }
+
+         */
+    }
+
+
+    private Particle getClosestParticle(Color c) {
+        double closest = Integer.MAX_VALUE;
+        int type;
+
+        ArrayList<Color> particleColors = new ArrayList<>();
+        particleColors.add(SandParticle.colors.get(0));
+        particleColors.add(WaterParticle.colors.get(0));
+
+        for (int i = 0; i < particleColors.size(); i++) {
+            double diff = colorDistance(c, particleColors.get(i));
+            if (diff < closest) {
+                closest = diff;
+                type = i;
+            }
+        }
+
+        /*
+        switch (type) {
+            case 0:
+                return new SandParticle(row, col, particleGrid, particleGrid.getRandom);
+        }
+
+         */
+
+        return new SandParticle(1, 2, particleGrid, null);
+
+    }
+
+    private double colorDistance(Color c1, Color c2) {
+        double dRed = Math.pow(c1.getRed() - c2.getRed(), 2);
+        double dGreen = Math.pow(c1.getGreen() - c2.getGreen(), 2);
+        double dBlue = Math.pow(c1.getBlue() - c2.getBlue(), 2);
+        return dRed + dGreen + dBlue;
+    }
+
 }
