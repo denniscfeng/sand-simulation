@@ -41,6 +41,9 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         buttonNames.add("Erase");
         buttonNames.add("Sand");
         buttonNames.add("Water");
+        buttonNames.add("Wall");
+        buttonNames.add("Wood");
+        buttonNames.add("Lava");
 
         //In the order of above buttonNames, correspond to ParticleType's
         ArrayList<String> buttonCommands = new ArrayList<>();
@@ -48,6 +51,9 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         buttonCommands.add("_ERASE");
         buttonCommands.add("SAND");
         buttonCommands.add("WATER");
+        buttonCommands.add("WALL");
+        buttonCommands.add("WOOD");
+        buttonCommands.add("LAVA");
 
         buttons = new JButton[buttonNames.size()];
 
