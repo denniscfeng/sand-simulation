@@ -40,8 +40,8 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         buttonNames.add("Clear");
         buttonNames.add("Erase");
         buttonNames.add("Sand");
-        buttonNames.add("Water");
         buttonNames.add("Wall");
+        buttonNames.add("Water");
         buttonNames.add("Wood");
         buttonNames.add("Lava");
 
@@ -50,8 +50,8 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         buttonCommands.add("_CLEAR");
         buttonCommands.add("_ERASE");
         buttonCommands.add("SAND");
-        buttonCommands.add("WATER");
         buttonCommands.add("WALL");
+        buttonCommands.add("WATER");
         buttonCommands.add("WOOD");
         buttonCommands.add("LAVA");
 

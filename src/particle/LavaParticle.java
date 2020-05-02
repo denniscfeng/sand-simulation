@@ -24,7 +24,7 @@ public class LavaParticle extends LiquidParticle {
     public void simulate() {
 
         // Always want lava to fall normally if nothing beneath it
-        if (row < particleGrid.numRows - 1 && particleGrid.grid[row + 1][col] == null) {
+        if (row < particleGrid.numRows - 1 && particleGrid.get(row + 1, col) == null) {
             rowNext = row + 1;
             colNext = col;
 
