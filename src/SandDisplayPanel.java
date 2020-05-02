@@ -148,12 +148,11 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
     public void reshape(GLAutoDrawable drawable, int i, int i1, int i2, int i3) { }
 
     public void handleFileUpload(File file) {
-        particleGrid.clear();
-        particleList.clear();
         BufferedImage img;
 
         try {
-            img = ImageIO.read(file);
+            Image temp = ImageIO.read(file).getScaledInstance(particleGrid.numCols, particleGrid.numRows, Image.SCALE_FAST);
+            img = toBufferedImage(temp);
         } catch (Exception e) {
             System.out.println("Error with image upload");
             return;
@@ -168,26 +167,23 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
                 int  r = (clr & 0x00ff0000) >> 16;
                 int  g = (clr & 0x0000ff00) >> 8;
                 int  b =  clr & 0x000000ff;
-                int[] coords = getCoordFromImage(x, y, width, height);
-                Particle temp = getClosestParticle(new Color(r, g, b), coords[0], coords[1]);
-                particleGrid.set(coords[0], coords[1], temp);
-                particles.add(temp);
+                Particle temp = getClosestParticle(new Color(r, g, b), y, x);
+                particleGrid.set(y, x, temp);
+                if (temp != null)
+                    particles.add(temp);
             }
         }
 
         particleList.addAll(particles);
     }
 
-    private int[] getCoordFromImage(int x, int y, int width, int height) {
-        int[] result = new int[2];
-        result[0] = particleGrid.numCols * y / height;
-        result[1] = particleGrid.numRows * x / width;
-        return result;
-    }
-
     ArrayList<Color> particleColors = new ArrayList<>() {{
         add(SandParticle.colors.get(0));
         add(WaterParticle.colors.get(0));
+        add(LavaParticle.colors.get(0));
+        add(WallParticle.colors.get(0));
+        add(WoodParticle.colors.get(0));
+        add(Color.BLACK);
     }};
 
     private Particle getClosestParticle(Color c, int row, int col) {
@@ -207,6 +203,14 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
                 return new SandParticle(row, col, particleGrid, particleGrid.getRandom());
             case 1:
                 return new WaterParticle(row, col, particleGrid, particleGrid.getRandom());
+            case 2:
+                return new LavaParticle(row, col, particleGrid, particleGrid.getRandom());
+            case 3:
+                return new WallParticle(row, col, particleGrid, particleGrid.getRandom());
+            case 4:
+                return new WoodParticle(row, col, particleGrid, particleGrid.getRandom());
+            case 5:
+                return null;
             default:
                 return null;
         }
@@ -219,6 +223,19 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         double dGreen = Math.pow(c1.getGreen() - c2.getGreen(), 2);
         double dBlue = Math.pow(c1.getBlue() - c2.getBlue(), 2);
         return dRed + dGreen + dBlue;
+    }
+
+    public static BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage)
+            return (BufferedImage) img;
+
+        BufferedImage bImage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D bGr = bImage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        return bImage;
     }
 
 }

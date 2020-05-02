@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class LavaParticle extends LiquidParticle {
 
-    static final ArrayList<Color> colors = new ArrayList<>() {{
+    public static final ArrayList<Color> colors = new ArrayList<>() {{
         add(new Color(231/256f, 128/256f, 31/256f));
         add(new Color(235/256f, 133/256f, 33/256f));
         add(new Color(226/256f, 123/256f, 30/256f));

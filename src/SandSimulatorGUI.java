@@ -148,10 +148,10 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
     public void showFilePopup() {
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "JPG & GIF Images", "jpg", "gif");
+                "JPG, PNG & GIF Images", "jpg", "gif", "png");
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(frame);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             sandDisplayPanel.handleFileUpload(chooser.getSelectedFile());
         }
     }

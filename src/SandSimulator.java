@@ -41,7 +41,6 @@ public class SandSimulator {
         long fpsStartTime = System.currentTimeMillis();
 
         while (true) {
-
             // Start timing frame
             long frameStartTime = System.currentTimeMillis();
 
