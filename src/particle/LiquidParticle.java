@@ -30,7 +30,7 @@ public abstract class LiquidParticle extends Particle{
 
             // If the cell below is not another liquid or solid particle (can be empty or gas(?)),
             // fall down and push the other particle aside
-            if (!(particleUnder instanceof LiquidParticle || particleUnder instanceof SolidParticle)) {
+            if (!canCollide(particleUnder)) {
 
                 pushParticle(particleUnder);
 
@@ -75,13 +75,13 @@ public abstract class LiquidParticle extends Particle{
                     particleLeft = particleGrid.get(row, colLeft);
                     particleRight = particleGrid.get(row, colRight);
 
-                    if (colLeft >= 0 && !(particleLeft instanceof LiquidParticle || particleLeft instanceof SolidParticle)) {
-                        if (colRight < particleGrid.numCols && !(particleRight instanceof LiquidParticle || particleRight instanceof SolidParticle)) {
+                    if (colLeft >= 0 && !canCollide(particleLeft)) {
+                        if (colRight < particleGrid.numCols && !canCollide(particleRight)) {
                             colNext = (random.nextInt(2) == 0) ? colLeft : colRight;
                         } else {
                             colNext = colLeft;
                         }
-                    } else if (colRight < particleGrid.numCols && !(particleRight instanceof LiquidParticle || particleRight instanceof SolidParticle)) {
+                    } else if (colRight < particleGrid.numCols && !canCollide(particleRight)) {
                         colNext = colRight;
                     }
                 }
@@ -97,6 +97,6 @@ public abstract class LiquidParticle extends Particle{
 
     @Override
     public boolean canCollide(Particle p) {
-        return p instanceof LiquidParticle || p instanceof SolidParticle;
+        return p instanceof LiquidParticle || p instanceof SolidParticle || p instanceof StaticParticle;
     }
 }
