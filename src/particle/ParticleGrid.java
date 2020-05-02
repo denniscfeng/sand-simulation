@@ -26,6 +26,9 @@ public class ParticleGrid {
     }
 
     public Particle get(int row, int col) {
+        if (!(row >= 0 && row < numRows && col >= 0 && col < numCols)) {
+            return null;
+        }
         return grid[row][col];
     }
 

@@ -4,7 +4,10 @@ public enum ParticleTool {
 
     _CLEAR,
     _ERASE,
+    WALL,
     SAND,
-    WATER
+    WATER,
+    WOOD,
+    LAVA
 
 }
