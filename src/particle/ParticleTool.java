@@ -8,6 +8,7 @@ public enum ParticleTool {
     SAND,
     WATER,
     WOOD,
-    LAVA
+    LAVA,
+    METHANE
 
 }
