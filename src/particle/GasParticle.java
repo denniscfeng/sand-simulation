@@ -29,6 +29,10 @@ public abstract class GasParticle extends Particle {
 
         collide();
 
+        if (rowNext == row && colNext == col) { // if particle stays still, decrease its lifetime
+            lifetime -= 1;
+        }
+
         // somewhere here goes interact()
 
     }
