@@ -12,10 +12,14 @@ public class ParticleFactory {
                 return new SandParticle(row, col, particleGrid, random);
             case WATER:
                 return new WaterParticle(row, col, particleGrid, random);
+            case FIRE:
+                return new FireParticle(row, col, particleGrid, random);
             case WOOD:
                 return new WoodParticle(row, col, particleGrid, random);
             case LAVA:
                 return new LavaParticle(row, col, particleGrid, random);
+            case METHANE:
+                return new MethaneParticle(row, col, particleGrid, random);
             default:
                 return null;
         }

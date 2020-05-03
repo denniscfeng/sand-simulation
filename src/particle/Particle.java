@@ -10,6 +10,7 @@ public abstract class Particle {
     public int rowNext;
     public int colNext;
     public Color color;
+    public int lifetime;
     ParticleGrid particleGrid;
     Random random;
 

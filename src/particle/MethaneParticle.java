@@ -4,22 +4,22 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class WaterParticle extends LiquidParticle {
+public class MethaneParticle extends GasParticle {
 
     static final ArrayList<Color> colors = new ArrayList<>() {{
-        add(new Color(88/256f, 128/256f, 195/256f));
-        add(new Color(90/256f, 131/256f, 198/256f));
-        add(new Color(85/256f, 123/256f, 187/256f));
+        add(new Color(21/256f, 21/256f, 21/256f));
+        add(new Color(31/256f, 31/256f, 31/256f));
+        add(new Color(41/256f, 41/256f, 41/256f));
     }};
 
-    public WaterParticle(int row, int col, ParticleGrid particleGrid, Random random) {
+    public MethaneParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.lifetime = -1;
+        this.lifetime = random.nextInt(150) + 50;
     }
 
     private Color createColor() {
-        return colors.get((row * col) % colors.size());
+        return colors.get(random.nextInt(colors.size()));
     }
 
     @Override
