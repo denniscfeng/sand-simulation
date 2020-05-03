@@ -16,6 +16,7 @@ public class WoodParticle extends StaticParticle {
     public WoodParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
+        this.lifetime = -1;
     }
 
     private Color createColor() {

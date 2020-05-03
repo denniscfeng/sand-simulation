@@ -25,6 +25,10 @@ public class ParticleGrid {
         grid[row][col] = particle;
     }
 
+    public void remove(int row, int col) {
+        grid[row][col] = null;
+    }
+
     public Particle get(int row, int col) {
         if (!(row >= 0 && row < numRows && col >= 0 && col < numCols)) {
             return null;
