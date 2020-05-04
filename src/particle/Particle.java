@@ -21,10 +21,10 @@ public abstract class Particle {
     public int maxLifetime = -1;
 
     public boolean onFire = false;
-    public int flammability = -1;
+    public double flammability = -1;
     public int minBurntime = -1;
     public int maxBurntime = -1;
-    public int fireCreateChance = -1;
+    public double fireCreateChance = -1;
 
     ParticleGrid particleGrid;
     Random random;
@@ -96,7 +96,7 @@ public abstract class Particle {
 
     // attempt to set this particle on Fire based on parameters
     public void setAfire() {
-        if (flammability >= 0 && !onFire && (random.nextInt(100) <= flammability)) {
+        if (flammability >= 0 && !onFire && (random.nextDouble() <= flammability)) {
             onFire = true;
             setLifetime(minBurntime, maxBurntime);
         }
@@ -111,7 +111,7 @@ public abstract class Particle {
 
             // with chance fireCreateChance, add a new Fire particle to an empty space by the particle
             // except for underneath it
-            if (random.nextInt(100) <= fireCreateChance) {
+            if (random.nextDouble() <= fireCreateChance) {
                 HashMap<int[], Particle> neighbors = getNeighbors();
                 ArrayList<int[]> emptySpaces = new ArrayList<>();
                 for (int[] neighborCoords : neighbors.keySet()) {
@@ -140,8 +140,10 @@ public abstract class Particle {
 
     // cancels fire and resets lifetime
     public void extinguish() {
-        onFire = false;
-        setLifetime(-1, -1);
+        if (onFire) {
+            onFire = false;
+            setLifetime(minLifetime, maxLifetime);
+        }
     }
 
     // sets lifetime, can be either exactly minLifetime or random range between

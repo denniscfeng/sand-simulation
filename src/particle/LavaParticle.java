@@ -2,6 +2,7 @@ package particle;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class LavaParticle extends LiquidParticle {
@@ -15,6 +16,7 @@ public class LavaParticle extends LiquidParticle {
     public LavaParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
+        this.fireCreateChance = 0.001;
     }
 
     private Color createColor() { return colors.get((row * col) % colors.size()); }
@@ -44,6 +46,33 @@ public class LavaParticle extends LiquidParticle {
     @Override
     public ArrayList<Particle> interact() {
         // Check for any special interactions with other particles
+        for (Particle neighborParticle : getNeighbors().values()) {
+
+            // attempt to set neighbor particle on fire
+            if (neighborParticle != null) {
+                neighborParticle.setAfire();
+            }
+
+        }
+
+        // with chance fireCreateChance, add a new Fire particle above the lava particle
+        ArrayList<Particle> newParticles = new ArrayList<>();
+        if (random.nextDouble() <= fireCreateChance) {
+            HashMap<int[], Particle> neighbors = getNeighbors();
+
+            for (int[] neighborCoords : neighbors.keySet()) {
+                if (neighbors.get(neighborCoords) == null && (neighborCoords[0] == row - 1)) {
+                    newParticles.add(new FireParticle(row - 1, col, particleGrid, random));
+                    break;
+                }
+            }
+
+        }
+
+        if (newParticles.size() > 0) {
+            return newParticles;
+        }
         return null;
+
     }
 }
