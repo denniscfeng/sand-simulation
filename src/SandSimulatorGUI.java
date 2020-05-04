@@ -3,10 +3,12 @@ import particle.ParticleTool;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SandSimulatorGUI implements ActionListener, ChangeListener {
 
@@ -28,6 +30,19 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         this.sandDisplayPanel = sandDisplayPanel;
         main.add(sandDisplayPanel);
 
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem importImage = new JMenuItem("Import Image");
+        importImage.addActionListener((event) -> showFilePopup());
+        JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener((event) -> System.exit(0));
+
+        fileMenu.add(importImage);
+        fileMenu.add(exit);
+        menuBar.add(fileMenu);
+        frame.setJMenuBar(menuBar);
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(250, 600));
         buttonPanel.setLayout(new GridBagLayout());
@@ -36,39 +51,30 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(0, 15, 5, 15);
 
-        ArrayList<String> buttonNames = new ArrayList<>();
-        buttonNames.add("Clear");
-        buttonNames.add("Erase");
-        buttonNames.add("Sand");
-        buttonNames.add("Wall");
-        buttonNames.add("Water");
-        buttonNames.add("Fire");
-        buttonNames.add("Wood");
-        buttonNames.add("Lava");
-        buttonNames.add("Methane");
-
-        //In the order of above buttonNames, correspond to ParticleType's
-        ArrayList<String> buttonCommands = new ArrayList<>();
-        buttonCommands.add("_CLEAR");
-        buttonCommands.add("_ERASE");
-        buttonCommands.add("SAND");
-        buttonCommands.add("WALL");
-        buttonCommands.add("WATER");
-        buttonCommands.add("FIRE");
-        buttonCommands.add("WOOD");
-        buttonCommands.add("LAVA");
-        buttonCommands.add("METHANE");
+        // Used LinkedHashMap because it preserves insertion order on iteration
+        LinkedHashMap<String, String> buttonNames = new LinkedHashMap<>();
+        buttonNames.put("Clear", "_CLEAR");
+        buttonNames.put("Erase", "_ERASE");
+        buttonNames.put("Sand", "SAND");
+        buttonNames.put("Wall", "WALL");
+        buttonNames.put("Water", "WATER");
+        buttonNames.put("Fire", "FIRE");
+        buttonNames.put("Wood", "WOOD");
+        buttonNames.put("Lava", "LAVA");
+        buttonNames.put("Methane", "METHANE");
 
         buttons = new JButton[buttonNames.size()];
 
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i] = new JButton(buttonNames.get(i));
-            buttons[i].setActionCommand(buttonCommands.get(i));
+        int i = 0;
+        for (Map.Entry<String, String> entry: buttonNames.entrySet()) {
+            buttons[i] = new JButton(entry.getKey());
+            buttons[i].setActionCommand(entry.getValue());
             buttons[i].addActionListener(this);
             buttons[i].setPreferredSize(new Dimension(100, 30));
             gbc.gridx = 0;
             gbc.gridy = i;
             buttonPanel.add(buttons[i], gbc);
+            i++;
         }
 
         buttons[2].setSelected(true);
@@ -133,6 +139,17 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
 
     public void setBrushWidth(int brushWidth) {
         this.brushWidth = brushWidth;
+    }
+
+    private void showFilePopup() {
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "JPG, PNG & GIF Images", "jpg", "gif", "png", "jpeg");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(frame);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            sandDisplayPanel.handleFileUpload(chooser.getSelectedFile());
+        }
     }
 
 }
