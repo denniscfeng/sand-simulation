@@ -15,7 +15,9 @@ public class FireParticle extends GasParticle {
     public FireParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.lifetime = random.nextInt(100) + 20;
+        this.minLifetime = 20;
+        this.maxLifetime = 120;
+        setLifetime(this.minLifetime, this.maxLifetime);
     }
 
     @Override

@@ -15,7 +15,6 @@ public class LavaParticle extends LiquidParticle {
     public LavaParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.lifetime = -1;
     }
 
     private Color createColor() { return colors.get((row * col) % colors.size()); }

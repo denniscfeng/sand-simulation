@@ -15,7 +15,9 @@ public class MethaneParticle extends GasParticle {
     public MethaneParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.lifetime = random.nextInt(150) + 50;
+        this.minLifetime = 50;
+        this.maxLifetime = 200;
+        setLifetime(this.minLifetime, this.maxLifetime);
     }
 
     private Color createColor() {

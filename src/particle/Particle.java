@@ -10,7 +10,10 @@ public abstract class Particle {
     public int rowNext;
     public int colNext;
     public Color color;
-    public int lifetime;
+    public int lifetime = -1;
+    public int minLifetime = -1;
+    public int maxLifetime = -1;
+    public int flammability = -1;
     ParticleGrid particleGrid;
     Random random;
 
@@ -66,6 +69,27 @@ public abstract class Particle {
             p.colNext = col;
         }
         p.updatePosition();
+    }
+
+    // get list of particles nearby to interact with
+    public Particle[] getNeighbors() {
+        // order is up, down, left, right
+        return new Particle[] {
+                particleGrid.get(row - 1, col),
+                particleGrid.get(row + 1, col),
+                particleGrid.get(row, col - 1),
+                particleGrid.get(row, col + 1)
+        };
+    }
+
+    // sets lifetime, can be either exactly minLifetime or random range between
+    // minLifetime and maxLifetime
+    public void setLifetime(int minLifetime, int maxLifetime) {
+        if (maxLifetime >= 0) {
+            this.lifetime = random.nextInt(maxLifetime - minLifetime) + minLifetime;
+        } else {
+            this.lifetime = minLifetime;
+        }
     }
 
     // used by specific particle types to change properties of other particles adjacent to them
