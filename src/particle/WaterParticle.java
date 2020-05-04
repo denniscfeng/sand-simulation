@@ -23,6 +23,18 @@ public class WaterParticle extends LiquidParticle {
 
     @Override
     public ArrayList<Particle> interact() {
+
+        for (Particle neighborParticle : getNeighbors().values()) {
+
+            // if water contacts a fire particle OR something that is
+            // on fire, put it out
+            if (neighborParticle != null && neighborParticle.onFire) {
+                neighborParticle.extinguish();
+            }
+
+        }
+
+
         return null;
     }
 

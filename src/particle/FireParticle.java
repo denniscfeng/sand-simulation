@@ -17,6 +17,7 @@ public class FireParticle extends GasParticle {
         this.color = createColor();
         this.minLifetime = 20;
         this.maxLifetime = 120;
+        this.onFire = true;
         setLifetime(this.minLifetime, this.maxLifetime);
     }
 
@@ -36,12 +37,21 @@ public class FireParticle extends GasParticle {
             colNext = col;
         }
 
-        lifetime -= 1;
+        if (onFire) {
+            lifetime -= 1;
+        } else {
+            lifetime = 0;
+        }
 
         collide();
 
         return interact();
 
+    }
+
+    @Override
+    public void extinguish() {
+        this.onFire = false;
     }
 
     private Color createColor() {
