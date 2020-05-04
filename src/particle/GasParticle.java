@@ -1,5 +1,6 @@
 package particle;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class GasParticle extends Particle {
@@ -9,7 +10,7 @@ public abstract class GasParticle extends Particle {
     }
 
     @Override
-    public void simulate() {
+    public ArrayList<Particle> simulate() {
 
         // particle randomly moves, but preferring in a non-down direction
         int direction = random.nextInt(7);
@@ -33,7 +34,7 @@ public abstract class GasParticle extends Particle {
             lifetime -= 1;
         }
 
-        interact();
+        return interact();
 
     }
 

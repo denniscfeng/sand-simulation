@@ -37,7 +37,8 @@ public abstract class Particle {
     }
 
     // run simulation step of the particle, to determine next positions
-    public abstract void simulate();
+    // additionally, return any new particles created by simulation;
+    public abstract ArrayList<Particle> simulate();
 
     // used by simulate to check particle collisions, which can result in calling
     // simulate() on other particles
@@ -99,28 +100,30 @@ public abstract class Particle {
         }
     }
 
-    // reduce lifetime and produce fire particles, setting neighbors on fire if burned out
-    public void burn() {
+    // reduce lifetime and produce fire particles, being replaced with fire
+    // particle when burnt out
+    public ArrayList<Particle> burn() {
+        ArrayList<Particle> newParticles = new ArrayList<>();
         if (onFire) {
             lifetime -= 1;
-            Particle[] neighbors = getNeighbors();
-
-//            for (Particle neighborParticle : neighbors) {
-//                // attempt to set neighbor particle on fire
-//                if (neighborParticle != null && if (random.nextInt(100) <= fireCreateChance) {
+//            Particle[] neighbors = getNeighbors();
 //
+//            for (Particle neighborParticle : neighbors) {
+//                if (neighborParticle != null && (random.nextInt(100) <= fireCreateChance) {
+//                    newParticles.add(new Particle())
 //                }
 //            }
 
             if (lifetime == 0) {
-                for (Particle neighborParticle : neighbors) {
-                    // attempt to set neighbor particle on fire
-                    if (neighborParticle != null) {
-                        neighborParticle.setAfire();
-                    }
-                }
+                newParticles.add(new FireParticle(row, col, particleGrid, random));
             }
         }
+
+        if (newParticles.size() > 0) {
+            return newParticles;
+        }
+        return null;
+
     }
 
     // cancels fire and resets lifetime
@@ -140,8 +143,10 @@ public abstract class Particle {
     }
 
     // used by specific particle types to change properties of other particles adjacent to them
-    public void interact() {
+    // allows for creation of new particles
+    public ArrayList<Particle> interact() {
         // most particles will not need interact()
+        return null;
     }
 
 

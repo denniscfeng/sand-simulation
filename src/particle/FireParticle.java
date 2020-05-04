@@ -21,7 +21,7 @@ public class FireParticle extends GasParticle {
     }
 
     @Override
-    public void simulate() {
+    public ArrayList<Particle> simulate() {
 
         // particle moves up, occasionally moving side to side
         int direction = random.nextInt(4);
@@ -40,7 +40,7 @@ public class FireParticle extends GasParticle {
 
         collide();
 
-        interact();
+        return interact();
 
     }
 
@@ -49,7 +49,7 @@ public class FireParticle extends GasParticle {
     }
 
     @Override
-    public void interact() {
+    public ArrayList<Particle> interact() {
 
         for (Particle neighborParticle : getNeighbors()) {
 
@@ -59,6 +59,8 @@ public class FireParticle extends GasParticle {
             }
 
         }
+
+        return null;
 
     }
 

@@ -21,7 +21,7 @@ public class LavaParticle extends LiquidParticle {
 
     // Override method to force lava to flow slower
     @Override
-    public void simulate() {
+    public ArrayList<Particle> simulate() {
 
         // Always want lava to fall normally if nothing beneath it
         if (row < particleGrid.numRows - 1 && particleGrid.get(row + 1, col) == null) {
@@ -37,12 +37,13 @@ public class LavaParticle extends LiquidParticle {
             colNext = col;
         }
 
-        interact();
+        return interact();
 
     }
 
     @Override
-    public void interact() {
+    public ArrayList<Particle> interact() {
         // Check for any special interactions with other particles
+        return null;
     }
 }

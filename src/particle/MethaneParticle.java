@@ -25,8 +25,9 @@ public class MethaneParticle extends GasParticle {
     }
 
     @Override
-    public void interact() {
+    public ArrayList<Particle> interact() {
         // Check for any special interactions with other particles
+        return null;
     }
 
 }

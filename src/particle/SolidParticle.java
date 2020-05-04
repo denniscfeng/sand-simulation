@@ -1,5 +1,6 @@
 package particle;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class SolidParticle extends Particle {
@@ -9,14 +10,14 @@ public abstract class SolidParticle extends Particle {
     }
 
     @Override
-    public void simulate() {
+    public ArrayList<Particle> simulate() {
 
         // particle prefers to fall
         rowNext = row + 1;
         colNext = col;
         collide();
 
-        interact();
+        return interact();
 
     }
 
