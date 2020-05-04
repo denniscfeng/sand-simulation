@@ -21,9 +21,4 @@ public class SandParticle extends SolidParticle{
         return colors.get((row * col) % colors.size());
     }
 
-    @Override
-    public void interact() {
-        // Check for any special interactions with other particles
-    }
-
 }

@@ -93,7 +93,9 @@ public abstract class Particle {
     }
 
     // used by specific particle types to change properties of other particles adjacent to them
-    public abstract void interact();
+    public void interact() {
+        // most particles will not need interact()
+    }
 
 
 }

@@ -24,7 +24,7 @@ public class WoodParticle extends StaticParticle {
 
     @Override
     public void interact() {
-
+        // Check for any special interactions with other particles
     }
 
 }

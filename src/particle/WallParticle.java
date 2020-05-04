@@ -21,9 +21,4 @@ public class WallParticle extends StaticParticle {
         return colors.get((row * col) % colors.size());
     }
 
-    @Override
-    public void interact() {
-        // Check for any special interactions with other particles
-    }
-
 }
