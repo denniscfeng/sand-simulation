@@ -243,5 +243,4 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
 
         return bImage;
     }
-
 }

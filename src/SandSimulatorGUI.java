@@ -141,7 +141,7 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         this.brushWidth = brushWidth;
     }
 
-    public void showFilePopup() {
+    private void showFilePopup() {
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "JPG, PNG & GIF Images", "jpg", "gif", "png", "jpeg");
