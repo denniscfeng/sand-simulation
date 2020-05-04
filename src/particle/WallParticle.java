@@ -23,7 +23,7 @@ public class WallParticle extends StaticParticle {
     }
 
     @Override
-    public void interact(Particle p) {
+    public void interact() {
         // Check for any special interactions with other particles
     }
 

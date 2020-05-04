@@ -23,7 +23,7 @@ public class WaterParticle extends LiquidParticle {
     }
 
     @Override
-    public void interact(Particle p) {
+    public void interact() {
         // Check for any special interactions with other particles
     }
 

@@ -33,7 +33,7 @@ public abstract class GasParticle extends Particle {
             lifetime -= 1;
         }
 
-        // somewhere here goes interact()
+        interact();
 
     }
 

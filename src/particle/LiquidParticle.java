@@ -16,7 +16,7 @@ public abstract class LiquidParticle extends Particle{
         colNext = col;
         collide();
 
-        // somewhere here goes interact()
+        interact();
 
     }
 

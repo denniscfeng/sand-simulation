@@ -23,7 +23,7 @@ public class SandParticle extends SolidParticle{
     }
 
     @Override
-    public void interact(Particle p) {
+    public void interact() {
         // Check for any special interactions with other particles
     }
 

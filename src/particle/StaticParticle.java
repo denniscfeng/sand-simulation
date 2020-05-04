@@ -11,7 +11,7 @@ public abstract class StaticParticle extends Particle {
     @Override
     public void simulate() {
 
-        // particle does nothing, stays in same place
+        interact();
 
     }
 

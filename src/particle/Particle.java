@@ -68,8 +68,8 @@ public abstract class Particle {
         p.updatePosition();
     }
 
-    // used by specific particle types to change properties of other particles
-    public abstract void interact(Particle p);
+    // used by specific particle types to change properties of other particles adjacent to them
+    public abstract void interact();
 
 
 }

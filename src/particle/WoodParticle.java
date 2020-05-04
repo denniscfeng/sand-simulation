@@ -24,7 +24,7 @@ public class WoodParticle extends StaticParticle {
     }
 
     @Override
-    public void interact(Particle p) {
+    public void interact() {
 
     }
 

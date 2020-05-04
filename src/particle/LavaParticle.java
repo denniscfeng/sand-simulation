@@ -40,9 +40,7 @@ public class LavaParticle extends LiquidParticle {
     }
 
     @Override
-    public void interact(Particle p) {
-        if (p instanceof WoodParticle) {
-            // Burn (need to implement abstract gas and fire particles for lava to cause fire)
-        }
+    public void interact() {
+        // Check for any special interactions with other particles
     }
 }
