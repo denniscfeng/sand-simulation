@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class FireParticle extends GasParticle {
 
-    static final ArrayList<Color> colors = new ArrayList<>() {{
+    public static final ArrayList<Color> colors = new ArrayList<>() {{
         add(new Color(255/256f, 117/256f, 0/256f));
         add(new Color(215/256f, 53/256f, 2/256f));
         add(new Color(255/256f, 0/256f, 0/256f));

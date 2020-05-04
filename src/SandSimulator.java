@@ -74,6 +74,7 @@ public class SandSimulator {
             if (particleTool == ParticleTool._CLEAR) {
                 particleGrid.clear();
                 particleList.clear();
+                sandSimulatorGUI.setParticleTool("SAND"); // Only clear screen once
             }
 
             // Show frame and count

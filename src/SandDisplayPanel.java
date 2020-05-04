@@ -183,6 +183,8 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         add(LavaParticle.colors.get(0));
         add(WallParticle.colors.get(0));
         add(WoodParticle.colors.get(0));
+        add(MethaneParticle.colors.get(0));
+        add(FireParticle.colors.get(0));
         add(Color.BLACK);
     }};
 
@@ -210,6 +212,10 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
             case 4:
                 return new WoodParticle(row, col, particleGrid, particleGrid.getRandom());
             case 5:
+                return new MethaneParticle(row, col, particleGrid, particleGrid.getRandom());
+            case 6:
+                return new FireParticle(row, col, particleGrid, particleGrid.getRandom());
+            case 7: // Empty
                 return null;
             default:
                 return null;
@@ -225,7 +231,7 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         return dRed + dGreen + dBlue;
     }
 
-    public static BufferedImage toBufferedImage(Image img) {
+    private static BufferedImage toBufferedImage(Image img) {
         if (img instanceof BufferedImage)
             return (BufferedImage) img;
 
