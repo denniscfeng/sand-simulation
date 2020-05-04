@@ -1,7 +1,10 @@
 package particle;
 
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 
 public abstract class Particle {
@@ -81,15 +84,14 @@ public abstract class Particle {
         p.updatePosition();
     }
 
-    // get list of particles nearby to interact with
-    public Particle[] getNeighbors() {
-        // order is up, down, left, right
-        return new Particle[] {
-                particleGrid.get(row - 1, col),
-                particleGrid.get(row + 1, col),
-                particleGrid.get(row, col - 1),
-                particleGrid.get(row, col + 1)
-        };
+    // get map of particles nearby to interact with
+    public HashMap<int[], Particle> getNeighbors() {
+        HashMap<int[], Particle> neighborMap = new HashMap<>();
+        neighborMap.put(new int[]{row - 1, col}, particleGrid.get(row - 1, col));
+        neighborMap.put(new int[]{row + 1, col}, particleGrid.get(row + 1, col));
+        neighborMap.put(new int[]{row, col - 1}, particleGrid.get(row, col - 1));
+        neighborMap.put(new int[]{row, col + 1}, particleGrid.get(row, col + 1));
+        return neighborMap;
     }
 
     // attempt to set this particle on Fire based on parameters
@@ -106,13 +108,22 @@ public abstract class Particle {
         ArrayList<Particle> newParticles = new ArrayList<>();
         if (onFire) {
             lifetime -= 1;
-//            Particle[] neighbors = getNeighbors();
-//
-//            for (Particle neighborParticle : neighbors) {
-//                if (neighborParticle != null && (random.nextInt(100) <= fireCreateChance) {
-//                    newParticles.add(new Particle())
-//                }
-//            }
+
+            // with chance fireCreateChance, add a new Fire particle to an empty space by the particle
+            if (random.nextInt(100) <= fireCreateChance) {
+                HashMap<int[], Particle> neighbors = getNeighbors();
+                ArrayList<int[]> emptySpaces = new ArrayList<>();
+                for (int[] neighborCoords : neighbors.keySet()) {
+                    if (neighbors.get(neighborCoords) == null) {
+                        emptySpaces.add(neighborCoords);
+                    }
+                }
+                if (emptySpaces.size() > 0) {
+                    int[] emptySpace = emptySpaces.get(random.nextInt(emptySpaces.size()));
+                    newParticles.add(new FireParticle(emptySpace[0], emptySpace[1], particleGrid, random));
+                }
+
+            }
 
             if (lifetime == 0) {
                 newParticles.add(new FireParticle(row, col, particleGrid, random));

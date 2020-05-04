@@ -51,7 +51,7 @@ public class FireParticle extends GasParticle {
     @Override
     public ArrayList<Particle> interact() {
 
-        for (Particle neighborParticle : getNeighbors()) {
+        for (Particle neighborParticle : getNeighbors().values()) {
 
             // attempt to set neighbor particle on fire
             if (neighborParticle != null) {
