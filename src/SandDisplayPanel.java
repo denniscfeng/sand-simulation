@@ -147,11 +147,39 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
     @Override
     public void reshape(GLAutoDrawable drawable, int i, int i1, int i2, int i3) { }
 
+    // Helper method to preserve image aspect ratio
+    private int[] getImageScale(int w, int h) {
+        int rows = particleGrid.numRows;
+        int cols = particleGrid.numCols;
+        int xScale, yScale;
+
+        if (w > h) {
+            if (w < cols)
+                return new int[] {w, h};
+
+            double scaleFactor = (double) cols / w;
+            xScale = cols;
+            yScale = (int) (h * scaleFactor);
+
+        } else {
+            if (h < rows)
+                return new int[] {w, h};
+
+            double scaleFactor = (double) rows / h;
+            yScale = rows;
+            xScale = (int) (w * scaleFactor);
+        }
+
+        return new int[] {xScale, yScale};
+    }
+
     public void handleFileUpload(File file) {
         BufferedImage img;
 
         try {
-            Image temp = ImageIO.read(file).getScaledInstance(particleGrid.numCols, particleGrid.numRows, Image.SCALE_FAST);
+            Image temp = ImageIO.read(file);
+            int[] scale = getImageScale(temp.getWidth(null), temp.getHeight(null));
+            temp = temp.getScaledInstance(scale[0], scale[1], Image.SCALE_FAST);
             img = toBufferedImage(temp);
         } catch (Exception e) {
             System.out.println("Error with image upload");
@@ -161,19 +189,27 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         ArrayList<Particle> particles = new ArrayList<>();
         int width = img.getWidth();
         int height = img.getHeight();
+
+        // startX and startY center the image by adding padding
+        int startX = Math.max(0, (particleGrid.numCols - width) / 2 - 1);
+        int startY = Math.max(0, (particleGrid.numRows - height) / 2 - 1);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int  clr   = img.getRGB(x, y);
                 int  r = (clr & 0x00ff0000) >> 16;
                 int  g = (clr & 0x0000ff00) >> 8;
                 int  b =  clr & 0x000000ff;
-                Particle temp = getClosestParticle(new Color(r, g, b), y, x);
-                particleGrid.set(y, x, temp);
+                int row = startY + y;
+                int col = startX + x;
+                Particle temp = getClosestParticle(new Color(r, g, b), row, col);
+                particleGrid.set(row, col, temp);
                 if (temp != null)
                     particles.add(temp);
             }
         }
 
+        // Add all the particles to particleList at once so the
+        // simulation starts all together
         particleList.addAll(particles);
     }
 
