@@ -7,10 +7,10 @@ import java.util.Random;
 
 public class LavaParticle extends LiquidParticle {
 
-    static final ArrayList<Color> colors = new ArrayList<>() {{
-        add(new Color(251/256f, 108/256f, 21/256f));
-        add(new Color(255/256f, 113/256f, 23/256f));
-        add(new Color(246/256f, 103/256f, 20/256f));
+    public static final ArrayList<Color> colors = new ArrayList<>() {{
+        add(new Color(231/256f, 128/256f, 31/256f));
+        add(new Color(235/256f, 133/256f, 33/256f));
+        add(new Color(226/256f, 123/256f, 30/256f));
     }};
 
     public LavaParticle(int row, int col, ParticleGrid particleGrid, Random random) {

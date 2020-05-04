@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class MethaneParticle extends GasParticle {
 
-    static final ArrayList<Color> colors = new ArrayList<>() {{
+    public static final ArrayList<Color> colors = new ArrayList<>() {{
         add(new Color(21/256f, 21/256f, 21/256f));
         add(new Color(31/256f, 31/256f, 31/256f));
         add(new Color(41/256f, 41/256f, 41/256f));

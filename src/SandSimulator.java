@@ -43,7 +43,6 @@ public class SandSimulator {
         long fpsStartTime = System.currentTimeMillis();
 
         while (true) {
-
             // Start timing frame
             long frameStartTime = System.currentTimeMillis();
 
@@ -76,6 +75,7 @@ public class SandSimulator {
             if (particleTool == ParticleTool._CLEAR) {
                 particleGrid.clear();
                 particleList.clear();
+                sandSimulatorGUI.setParticleTool("SAND"); // Only clear screen once
             }
 
             // Show frame and count
