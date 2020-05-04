@@ -36,6 +36,9 @@ public class LavaParticle extends LiquidParticle {
             rowNext = row;
             colNext = col;
         }
+
+        interact();
+
     }
 
     @Override

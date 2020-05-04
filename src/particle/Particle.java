@@ -1,6 +1,7 @@
 package particle;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Particle {
@@ -9,11 +10,19 @@ public abstract class Particle {
     public int col;
     public int rowNext;
     public int colNext;
+
     public Color color;
+
     public int lifetime = -1;
     public int minLifetime = -1;
     public int maxLifetime = -1;
+
+    public boolean onFire = false;
     public int flammability = -1;
+    public int minBurntime = -1;
+    public int maxBurntime = -1;
+    public int fireCreateChance = -1;
+
     ParticleGrid particleGrid;
     Random random;
 
@@ -82,13 +91,51 @@ public abstract class Particle {
         };
     }
 
+    // attempt to set this particle on Fire based on parameters
+    public void setAfire() {
+        if (flammability >= 0 && !onFire && (random.nextInt(100) <= flammability)) {
+            onFire = true;
+            setLifetime(minBurntime, maxBurntime);
+        }
+    }
+
+    // reduce lifetime and produce fire particles, setting neighbors on fire if burned out
+    public void burn() {
+        if (onFire) {
+            lifetime -= 1;
+            Particle[] neighbors = getNeighbors();
+
+//            for (Particle neighborParticle : neighbors) {
+//                // attempt to set neighbor particle on fire
+//                if (neighborParticle != null && if (random.nextInt(100) <= fireCreateChance) {
+//
+//                }
+//            }
+
+            if (lifetime == 0) {
+                for (Particle neighborParticle : neighbors) {
+                    // attempt to set neighbor particle on fire
+                    if (neighborParticle != null) {
+                        neighborParticle.setAfire();
+                    }
+                }
+            }
+        }
+    }
+
+    // cancels fire and resets lifetime
+    public void extinguish() {
+        onFire = false;
+        setLifetime(-1, -1);
+    }
+
     // sets lifetime, can be either exactly minLifetime or random range between
     // minLifetime and maxLifetime
     public void setLifetime(int minLifetime, int maxLifetime) {
         if (maxLifetime >= 0) {
-            this.lifetime = random.nextInt(maxLifetime - minLifetime) + minLifetime;
+            lifetime = random.nextInt(maxLifetime - minLifetime) + minLifetime;
         } else {
-            this.lifetime = minLifetime;
+            lifetime = minLifetime;
         }
     }
 

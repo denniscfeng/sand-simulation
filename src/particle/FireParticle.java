@@ -40,7 +40,7 @@ public class FireParticle extends GasParticle {
 
         collide();
 
-        // somewhere here goes interact()
+        interact();
 
     }
 
@@ -50,7 +50,16 @@ public class FireParticle extends GasParticle {
 
     @Override
     public void interact() {
-        // Check for any special interactions with other particles
+
+        for (Particle neighborParticle : getNeighbors()) {
+
+            // attempt to set neighbor particle on fire
+            if (neighborParticle != null) {
+                neighborParticle.setAfire();
+            }
+
+        }
+
     }
 
 }
