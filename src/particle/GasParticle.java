@@ -41,16 +41,15 @@ public abstract class GasParticle extends Particle {
     @Override
     public void collide() {
 
-        if (rowNext >= particleGrid.numRows || rowNext <= 0) {
-            rowNext = row;
-        } else if (colNext >= particleGrid.numCols || colNext <= 0) {
-            colNext = col;
-        }
-
-        Particle particleNear = particleGrid.get(rowNext, colNext);
-        if (canCollide(particleNear)) {
+        if (!particleGrid.checkBounds(rowNext, colNext)) {
             rowNext = row;
             colNext = col;
+        } else {
+            Particle particleNear = particleGrid.get(rowNext, colNext);
+            if (canCollide(particleNear)) {
+                rowNext = row;
+                colNext = col;
+            }
         }
 
     }

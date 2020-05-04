@@ -16,6 +16,8 @@ public class MethaneParticle extends GasParticle {
     public MethaneParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
+        this.minLifetime = 50;
+        this.maxLifetime = 200;
         this.flammability = 1.0;
         this.minBurntime = 1;
         this.maxBurntime = -1;
@@ -31,8 +33,12 @@ public class MethaneParticle extends GasParticle {
     @Override
     public ArrayList<Particle> burn() {
         ArrayList<Particle> newParticles = new ArrayList<>();
-        if (onFire && lifetime > 0) { // to ensure that the lifetime does not get decreased to -1
+        if (onFire) {
+
             lifetime -= 1;
+            if (lifetime < 0) { // to ensure that the lifetime does not get decreased to -1
+                lifetime = 0;
+            }
 
             HashMap<int[], Particle> neighbors = getNeighbors();
             ArrayList<int[]> emptySpaces = new ArrayList<>();
@@ -44,7 +50,7 @@ public class MethaneParticle extends GasParticle {
 
             if (lifetime == 0) {
                 // if this particle is burnt out, "explode"
-                newParticles.add(new FireParticle(row, col, particleGrid, random));
+//                newParticles.add(new FireParticle(row, col, particleGrid, random));
                 for (int[] emptySpace : emptySpaces) {
                     newParticles.add(new FireParticle(emptySpace[0], emptySpace[1], particleGrid, random));
                 }
@@ -54,7 +60,6 @@ public class MethaneParticle extends GasParticle {
                     int[] emptySpace = emptySpaces.get(random.nextInt(emptySpaces.size()));
                     newParticles.add(new FireParticle(emptySpace[0], emptySpace[1], particleGrid, random));
                 }
-
             }
 
         }
