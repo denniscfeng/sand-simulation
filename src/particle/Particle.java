@@ -87,10 +87,10 @@ public abstract class Particle {
     // get map of particles nearby to interact with
     public HashMap<int[], Particle> getNeighbors() {
         HashMap<int[], Particle> neighborMap = new HashMap<>();
-        neighborMap.put(new int[]{row - 1, col}, particleGrid.get(row - 1, col));
-        neighborMap.put(new int[]{row + 1, col}, particleGrid.get(row + 1, col));
-        neighborMap.put(new int[]{row, col - 1}, particleGrid.get(row, col - 1));
-        neighborMap.put(new int[]{row, col + 1}, particleGrid.get(row, col + 1));
+        if (particleGrid.checkBounds(row - 1, col)) neighborMap.put(new int[]{row - 1, col}, particleGrid.get(row - 1, col));
+        if (particleGrid.checkBounds(row + 1, col)) neighborMap.put(new int[]{row + 1, col}, particleGrid.get(row + 1, col));
+        if (particleGrid.checkBounds(row, col - 1)) neighborMap.put(new int[]{row, col - 1}, particleGrid.get(row, col - 1));
+        if (particleGrid.checkBounds(row, col + 1)) neighborMap.put(new int[]{row, col + 1}, particleGrid.get(row, col + 1));
         return neighborMap;
     }
 
@@ -110,11 +110,12 @@ public abstract class Particle {
             lifetime -= 1;
 
             // with chance fireCreateChance, add a new Fire particle to an empty space by the particle
+            // except for underneath it
             if (random.nextInt(100) <= fireCreateChance) {
                 HashMap<int[], Particle> neighbors = getNeighbors();
                 ArrayList<int[]> emptySpaces = new ArrayList<>();
                 for (int[] neighborCoords : neighbors.keySet()) {
-                    if (neighbors.get(neighborCoords) == null) {
+                    if (neighbors.get(neighborCoords) == null && (neighborCoords[0] == row - 1)) {
                         emptySpaces.add(neighborCoords);
                     }
                 }
