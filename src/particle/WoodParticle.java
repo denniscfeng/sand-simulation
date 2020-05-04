@@ -17,9 +17,9 @@ public class WoodParticle extends StaticParticle {
         super(row, col, particleGrid, random);
         this.color = createColor();
         this.flammability = 90;
-        this.minBurntime = 100;
+        this.minBurntime = 50;
         this.maxBurntime = 300;
-        this.fireCreateChance = 10;
+        this.fireCreateChance = 15;
     }
 
     private Color createColor() {
