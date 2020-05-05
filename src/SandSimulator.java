@@ -18,6 +18,7 @@ public class SandSimulator {
 
         ParticleGrid particleGrid = new ParticleGrid(numRows, numCols, random);
         ArrayList<Particle> particleList = new ArrayList<>();
+        ArrayList<Particle> particleAddList = new ArrayList<>();
         ArrayList<Particle> particleRemoveList = new ArrayList<>();
 
         SandDisplayPanel sandDisplayPanel = new SandDisplayPanel(particleGrid, particleList);
@@ -89,14 +90,21 @@ public class SandSimulator {
                 if (particle.lifetime == 0) { // Particles that have a finite lifespan are removed
                     particleRemoveList.add(particle);
                     particleGrid.remove(particle.row, particle.col);
-                } else {
-                    particle.simulate();
+                } else { // Simulate a particle and add any new particles that are created
+                    ArrayList<Particle> newParticles = particle.simulate();
+                    if (newParticles != null) {
+                        particleAddList.addAll(newParticles);
+                    }
                     particle.updatePosition();
                 }
             }
 
             particleList.removeAll(particleRemoveList);
             particleRemoveList.clear();
+
+            particleList.addAll(particleAddList);
+            particleAddList.clear();
+
 
             // End timing frame
             long frameEndTime = System.currentTimeMillis();

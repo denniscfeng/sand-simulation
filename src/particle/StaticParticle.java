@@ -1,5 +1,6 @@
 package particle;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class StaticParticle extends Particle {
@@ -9,9 +10,9 @@ public abstract class StaticParticle extends Particle {
     }
 
     @Override
-    public void simulate() {
+    public ArrayList<Particle> simulate() {
 
-        // particle does nothing, stays in same place
+        return interact();
 
     }
 

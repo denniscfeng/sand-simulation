@@ -2,6 +2,7 @@ package particle;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class LavaParticle extends LiquidParticle {
@@ -15,14 +16,14 @@ public class LavaParticle extends LiquidParticle {
     public LavaParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.lifetime = -1;
+        this.fireCreateChance = 0.001;
     }
 
     private Color createColor() { return colors.get((row * col) % colors.size()); }
 
     // Override method to force lava to flow slower
     @Override
-    public void simulate() {
+    public ArrayList<Particle> simulate() {
 
         // Always want lava to fall normally if nothing beneath it
         if (row < particleGrid.numRows - 1 && particleGrid.get(row + 1, col) == null) {
@@ -37,12 +38,41 @@ public class LavaParticle extends LiquidParticle {
             rowNext = row;
             colNext = col;
         }
+
+        return interact();
+
     }
 
     @Override
-    public void interact(Particle p) {
-        if (p instanceof WoodParticle) {
-            // Burn (need to implement abstract gas and fire particles for lava to cause fire)
+    public ArrayList<Particle> interact() {
+        // Check for any special interactions with other particles
+        for (Particle neighborParticle : getNeighbors().values()) {
+
+            // attempt to set neighbor particle on fire
+            if (neighborParticle != null) {
+                neighborParticle.setAfire();
+            }
+
         }
+
+        // with chance fireCreateChance, add a new Fire particle above the lava particle
+        ArrayList<Particle> newParticles = new ArrayList<>();
+        if (random.nextDouble() <= fireCreateChance) {
+            HashMap<int[], Particle> neighbors = getNeighbors();
+
+            for (int[] neighborCoords : neighbors.keySet()) {
+                if (neighbors.get(neighborCoords) == null && (neighborCoords[0] == row - 1)) {
+                    newParticles.add(new FireParticle(row - 1, col, particleGrid, random));
+                    break;
+                }
+            }
+
+        }
+
+        if (newParticles.size() > 0) {
+            return newParticles;
+        }
+        return null;
+
     }
 }

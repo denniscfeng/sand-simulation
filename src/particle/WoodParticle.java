@@ -16,7 +16,10 @@ public class WoodParticle extends StaticParticle {
     public WoodParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.lifetime = -1;
+        this.flammability = 0.8;
+        this.minBurntime = 50;
+        this.maxBurntime = 300;
+        this.fireCreateChance = 0.15;
     }
 
     private Color createColor() {
@@ -24,7 +27,9 @@ public class WoodParticle extends StaticParticle {
     }
 
     @Override
-    public void interact(Particle p) {
+    public ArrayList<Particle> interact() {
+
+        return burn();
 
     }
 

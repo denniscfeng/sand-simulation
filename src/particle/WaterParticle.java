@@ -15,7 +15,6 @@ public class WaterParticle extends LiquidParticle {
     public WaterParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.lifetime = -1;
     }
 
     private Color createColor() {
@@ -23,8 +22,20 @@ public class WaterParticle extends LiquidParticle {
     }
 
     @Override
-    public void interact(Particle p) {
-        // Check for any special interactions with other particles
+    public ArrayList<Particle> interact() {
+
+        for (Particle neighborParticle : getNeighbors().values()) {
+
+            // if water contacts a fire particle OR something that is
+            // on fire, put it out
+            if (neighborParticle != null && neighborParticle.onFire) {
+                neighborParticle.extinguish();
+            }
+
+        }
+
+
+        return null;
     }
 
 }

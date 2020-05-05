@@ -15,11 +15,14 @@ public class FireParticle extends GasParticle {
     public FireParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.lifetime = random.nextInt(100) + 20;
+        this.minLifetime = 20;
+        this.maxLifetime = 120;
+        this.onFire = true;
+        setLifetime(this.minLifetime, this.maxLifetime);
     }
 
     @Override
-    public void simulate() {
+    public ArrayList<Particle> simulate() {
 
         // particle moves up, occasionally moving side to side
         int direction = random.nextInt(4);
@@ -34,12 +37,21 @@ public class FireParticle extends GasParticle {
             colNext = col;
         }
 
-        lifetime -= 1;
+        if (onFire) {
+            lifetime -= 1;
+        } else {
+            lifetime = 0;
+        }
 
         collide();
 
-        // somewhere here goes interact()
+        return interact();
 
+    }
+
+    @Override
+    public void extinguish() {
+        this.onFire = false;
     }
 
     private Color createColor() {
@@ -47,8 +59,19 @@ public class FireParticle extends GasParticle {
     }
 
     @Override
-    public void interact(Particle p) {
-        // Check for any special interactions with other particles
+    public ArrayList<Particle> interact() {
+
+        for (Particle neighborParticle : getNeighbors().values()) {
+
+            // attempt to set neighbor particle on fire
+            if (neighborParticle != null) {
+                neighborParticle.setAfire();
+            }
+
+        }
+
+        return null;
+
     }
 
 }

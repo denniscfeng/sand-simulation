@@ -29,8 +29,12 @@ public class ParticleGrid {
         grid[row][col] = null;
     }
 
+    public boolean checkBounds(int row, int col) {
+        return (row >= 0 && row < numRows && col >= 0 && col < numCols);
+    }
+
     public Particle get(int row, int col) {
-        if (!(row >= 0 && row < numRows && col >= 0 && col < numCols)) {
+        if (!checkBounds(row, col)) {
             return null;
         }
         return grid[row][col];
