@@ -16,6 +16,8 @@ public class ParticleFactory {
                 return new WoodParticle(row, col, particleGrid, random);
             case LAVA:
                 return new LavaParticle(row, col, particleGrid, random);
+            case STONE:
+                return new StoneParticle(row, col, particleGrid, random);
             default:
                 return null;
         }
