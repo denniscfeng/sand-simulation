@@ -65,6 +65,7 @@ public class LavaParticle extends LiquidParticle {
         // with chance fireCreateChance, add a new Fire particle above the lava particle
         if (random.nextDouble() <= fireCreateChance) {
             HashMap<int[], Particle> neighbors = getNeighbors();
+
             for (int[] neighborCoords : neighbors.keySet()) {
                 if (neighbors.get(neighborCoords) == null && (neighborCoords[0] == row - 1)) {
                     newParticles.add(new FireParticle(row - 1, col, particleGrid, random));

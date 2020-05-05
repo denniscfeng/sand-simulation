@@ -37,8 +37,4 @@ public class StoneParticle extends SolidParticle {
             rowNext = row;
         }
     }
-
-    public boolean equals(Particle p) {
-        return row == p.row && col == p.col;
-    }
 }

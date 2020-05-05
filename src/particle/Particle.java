@@ -160,10 +160,4 @@ public abstract class Particle {
         // most particles will not need interact()
         return null;
     }
-
-    public boolean equals(Particle p) {
-        return row == p.row && col == p.col;
-    }
-
-
 }

@@ -2,7 +2,6 @@
 import particle.Particle;
 import particle.ParticleGrid;
 import particle.ParticleTool;
-import particle.StoneParticle;
 
 import java.util.ArrayList;
 import java.util.Collections;

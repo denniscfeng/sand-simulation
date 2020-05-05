@@ -51,7 +51,6 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(0, 15, 5, 15);
 
-
         // Used LinkedHashMap because it preserves insertion order on iteration
         LinkedHashMap<String, String> buttonNames = new LinkedHashMap<>();
         buttonNames.put("Clear", "_CLEAR");
