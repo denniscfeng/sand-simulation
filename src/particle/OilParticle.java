@@ -15,10 +15,10 @@ public class OilParticle extends LiquidParticle {
     public OilParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
-        this.flammability = 0.9;
-        this.minBurntime = 50;
-        this.maxBurntime = 300;
-        this.fireCreateChance = 0.15;
+        this.flammability = 0.95;
+        this.minBurntime = 5;
+        this.maxBurntime = 75;
+        this.fireCreateChance = 0.75;
     }
 
     private Color createColor() { return colors.get((row * col) % colors.size()); }

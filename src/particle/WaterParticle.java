@@ -30,8 +30,8 @@ public class WaterParticle extends LiquidParticle {
             Particle particleUnder = particleGrid.get(rowNext, col);
 
             // If the cell below is not another liquid or solid particle (can be empty or gas(?)),
-            // fall down and push the other particle aside, also fall below oil particles
-            if (!canCollide(particleUnder) || particleUnder instanceof OilParticle) {
+            // fall down and push the other particle aside
+            if (!canCollide(particleUnder)) {
 
                 pushParticle(particleUnder);
 
@@ -82,9 +82,16 @@ public class WaterParticle extends LiquidParticle {
                         } else {
                             colNext = colLeft;
                         }
+
                     } else if (colRight < particleGrid.numCols && !canCollide(particleRight)) {
                         colNext = colRight;
                     }
+
+                    // Swap spots with Oil
+                    if (colNext == colRight && particleRight instanceof OilParticle)
+                        swapWith(particleRight);
+                    else if (colNext == colLeft && particleLeft instanceof OilParticle)
+                        swapWith(particleLeft);
                 }
 
             }
@@ -94,6 +101,16 @@ public class WaterParticle extends LiquidParticle {
             rowNext = row;
         }
 
+    }
+
+    private void swapWith(Particle p) {
+        p.col = this.col;
+        particleGrid.set(p.row, p.col, p);
+    }
+
+    @Override
+    public boolean canCollide(Particle p) {
+        return !(p instanceof OilParticle) && (p instanceof LiquidParticle || p instanceof SolidParticle || p instanceof StaticParticle);
     }
 
     @Override
