@@ -38,8 +38,7 @@ public class StoneParticle extends SolidParticle {
         }
     }
 
-    @Override
-    public void interact(Particle p) {
-
+    public boolean equals(Particle p) {
+        return row == p.row && col == p.col;
     }
 }

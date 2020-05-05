@@ -7,7 +7,7 @@ import java.util.Random;
 public class WoodParticle extends StaticParticle {
 
 
-    static final ArrayList<Color> colors = new ArrayList<>() {{
+    public static final ArrayList<Color> colors = new ArrayList<>() {{
         add(new Color(82/256f, 50/256f, 24/256f));
         add(new Color(87/256f, 53/256f, 28/256f));
         add(new Color(76/256f, 38/256f, 17/256f));
@@ -16,6 +16,10 @@ public class WoodParticle extends StaticParticle {
     public WoodParticle(int row, int col, ParticleGrid particleGrid, Random random) {
         super(row, col, particleGrid, random);
         this.color = createColor();
+        this.flammability = 0.8;
+        this.minBurntime = 50;
+        this.maxBurntime = 300;
+        this.fireCreateChance = 0.15;
     }
 
     private Color createColor() {
@@ -23,7 +27,9 @@ public class WoodParticle extends StaticParticle {
     }
 
     @Override
-    public void interact(Particle p) {
+    public ArrayList<Particle> interact() {
+
+        return burn();
 
     }
 

@@ -2,6 +2,7 @@
 import particle.Particle;
 import particle.ParticleGrid;
 import particle.ParticleTool;
+import particle.StoneParticle;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +19,8 @@ public class SandSimulator {
 
         ParticleGrid particleGrid = new ParticleGrid(numRows, numCols, random);
         ArrayList<Particle> particleList = new ArrayList<>();
+        ArrayList<Particle> particleAddList = new ArrayList<>();
+        ArrayList<Particle> particleRemoveList = new ArrayList<>();
 
         SandDisplayPanel sandDisplayPanel = new SandDisplayPanel(particleGrid, particleList);
         SandSimulatorGUI sandSimulatorGUI = new SandSimulatorGUI(sandDisplayPanel);
@@ -41,7 +44,6 @@ public class SandSimulator {
         long fpsStartTime = System.currentTimeMillis();
 
         while (true) {
-
             // Start timing frame
             long frameStartTime = System.currentTimeMillis();
 
@@ -74,6 +76,7 @@ public class SandSimulator {
             if (particleTool == ParticleTool._CLEAR) {
                 particleGrid.clear();
                 particleList.clear();
+                sandSimulatorGUI.setParticleTool("SAND"); // Only clear screen once
             }
 
             // Show frame and count
@@ -85,9 +88,25 @@ public class SandSimulator {
 
             // Simulate!
             for (Particle particle : particleList) {
-                particle.simulate();
-                particle.updatePosition();
+                if (particle.lifetime == 0) { // Particles that have a finite lifespan are removed
+                    particleRemoveList.add(particle);
+                    particleGrid.remove(particle.row, particle.col);
+                } else {
+                    // Simulate a particle and add any new particles that are created
+                    ArrayList<Particle> newParticles = particle.simulate();
+                    if (newParticles != null) {
+                        particleAddList.addAll(newParticles);
+                    }
+                    particle.updatePosition();
+                }
             }
+
+            particleList.removeAll(particleRemoveList);
+            particleRemoveList.clear();
+
+            particleList.addAll(particleAddList);
+            particleAddList.clear();
+
 
             // End timing frame
             long frameEndTime = System.currentTimeMillis();
