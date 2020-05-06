@@ -85,6 +85,10 @@ public abstract class LiquidParticle extends Particle{
                     } else if (colRight < particleGrid.numCols && !canCollide(particleRight)) {
                         colNext = colRight;
                     }
+
+                    // Push the other particle aside
+                    pushParticle(particleGrid.get(rowNext, colNext));
+
                 }
 
             }

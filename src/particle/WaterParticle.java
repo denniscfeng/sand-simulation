@@ -22,6 +22,11 @@ public class WaterParticle extends LiquidParticle {
     }
 
     @Override
+    public boolean canCollide(Particle p) {
+        return !(p instanceof OilParticle) && (p instanceof LiquidParticle || p instanceof SolidParticle || p instanceof StaticParticle);
+    }
+
+    @Override
     public ArrayList<Particle> interact() {
 
         for (Particle neighborParticle : getNeighbors().values()) {

@@ -20,6 +20,10 @@ public class ParticleFactory {
                 return new LavaParticle(row, col, particleGrid, random);
             case METHANE:
                 return new MethaneParticle(row, col, particleGrid, random);
+            case OIL:
+                return new OilParticle(row, col, particleGrid, random);
+            case _ERASE:
+                return null;
             default:
                 return null;
         }
