@@ -90,7 +90,8 @@ public class SandSimulator {
                 if (particle.lifetime == 0) { // Particles that have a finite lifespan are removed
                     particleRemoveList.add(particle);
                     particleGrid.remove(particle.row, particle.col);
-                } else { // Simulate a particle and add any new particles that are created
+                } else {
+                    // Simulate a particle and add any new particles that are created
                     ArrayList<Particle> newParticles = particle.simulate();
                     if (newParticles != null) {
                         particleAddList.addAll(newParticles);

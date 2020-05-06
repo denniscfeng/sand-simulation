@@ -11,5 +11,6 @@ public enum ParticleTool {
     WOOD,
     LAVA,
     METHANE,
+    STONE,
     OIL
 }

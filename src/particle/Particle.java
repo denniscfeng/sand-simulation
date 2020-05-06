@@ -160,6 +160,4 @@ public abstract class Particle {
         // most particles will not need interact()
         return null;
     }
-
-
 }
