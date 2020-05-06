@@ -10,7 +10,7 @@ public enum ParticleTool {
     FIRE,
     WOOD,
     LAVA,
+    METHANE,
     STONE,
-    METHANE
-
+    OIL
 }

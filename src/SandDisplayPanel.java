@@ -9,6 +9,8 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SandDisplayPanel extends JPanel implements MouseListener, MouseMotionListener, GLEventListener {
 
@@ -213,50 +215,32 @@ public class SandDisplayPanel extends JPanel implements MouseListener, MouseMoti
         particleList.addAll(particles);
     }
 
-    ArrayList<Color> particleColors = new ArrayList<>() {{
-        add(SandParticle.colors.get(0));
-        add(WaterParticle.colors.get(0));
-        add(LavaParticle.colors.get(0));
-        add(WallParticle.colors.get(0));
-        add(WoodParticle.colors.get(0));
-        add(MethaneParticle.colors.get(0));
-        add(FireParticle.colors.get(0));
-        add(Color.BLACK);
+    HashMap<String, Color> particleColors = new HashMap<>() {{
+        put("SAND", SandParticle.colors.get(0));
+        put("WATER", WaterParticle.colors.get(0));
+        put("LAVA", LavaParticle.colors.get(0));
+        put("WALL", WallParticle.colors.get(0));
+        put("WOOD", WoodParticle.colors.get(0));
+        put("METHANE", MethaneParticle.colors.get(0));
+        put("FIRE", FireParticle.colors.get(0));
+        put("OIL", OilParticle.colors.get(0));
+        put("_ERASE", Color.BLACK);
     }};
 
     private Particle getClosestParticle(Color c, int row, int col) {
         double closest = Integer.MAX_VALUE;
-        int particleType = -1;
+        String particleType = "";
 
-        for (int i = 0; i < particleColors.size(); i++) {
-            double diff = colorDistance(c, particleColors.get(i));
+        for (Map.Entry<String, Color> entry : particleColors.entrySet()) {
+            double diff = colorDistance(c, entry.getValue());
             if (diff < closest) {
                 closest = diff;
-                particleType = i;
+                particleType = entry.getKey();
             }
         }
 
-        switch (particleType) {
-            case 0:
-                return new SandParticle(row, col, particleGrid, particleGrid.getRandom());
-            case 1:
-                return new WaterParticle(row, col, particleGrid, particleGrid.getRandom());
-            case 2:
-                return new LavaParticle(row, col, particleGrid, particleGrid.getRandom());
-            case 3:
-                return new WallParticle(row, col, particleGrid, particleGrid.getRandom());
-            case 4:
-                return new WoodParticle(row, col, particleGrid, particleGrid.getRandom());
-            case 5:
-                return new MethaneParticle(row, col, particleGrid, particleGrid.getRandom());
-            case 6:
-                return new FireParticle(row, col, particleGrid, particleGrid.getRandom());
-            case 7: // Empty
-                return null;
-            default:
-                return null;
-        }
-
+        ParticleTool type = ParticleTool.valueOf(particleType);
+        return ParticleFactory.getParticle(row, col, type, particleGrid, particleGrid.getRandom());
 
     }
 

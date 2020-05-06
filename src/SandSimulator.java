@@ -125,9 +125,9 @@ public class SandSimulator {
             long fpsTimeTaken = frameEndTime - fpsStartTime;
             if (fpsTimeTaken > fpsCountTime) {
 
-                long avgfps = (fpsTimeTaken/framesCount);
+                long avgTimePerFrame = (fpsTimeTaken/framesCount);
 
-                System.out.printf("FPS: %d     Time per frame: %d ms\n", avgfps, 1000/avgfps);
+                System.out.printf("FPS: %d     Time per frame: %d ms\n", 1000/avgTimePerFrame, avgTimePerFrame);
                 fpsStartTime = frameEndTime;
                 framesCount = 0;
 

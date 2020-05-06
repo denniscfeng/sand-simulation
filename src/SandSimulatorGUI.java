@@ -63,6 +63,7 @@ public class SandSimulatorGUI implements ActionListener, ChangeListener {
         buttonNames.put("Lava", "LAVA");
         buttonNames.put("Methane", "METHANE");
         buttonNames.put("Stone", "STONE");
+        buttonNames.put("Oil", "OIL");
 
         buttons = new JButton[buttonNames.size()];
 
