@@ -1,4 +1,7 @@
 # Sand Simulation
+
+### Project Report: [GitHub Page](https://denniscfeng.github.io/sand-simulation/)
+
 ### Install Dependencies
 #### JOGL 
 
