@@ -79,7 +79,7 @@
             <ol>
                 <li>The next position is set to the Particle’s preferred next position. For solids and liquids, the next position is the grid space underneath its current position. For gasses, the particle can move randomly up, down, left, or right with a slightly higher probability of up. For static particles, the particle stays where it is.</li><br>
                 <li>
-                    The collide() method of the Particle is called. The collide() method checks for collisions with the particle in the desired next position. If a particle exists there, each of the subgroup classes defines some behaviors on what to do next. Its behavior is also determined by the canCollide() method, which checks if the type of particle in the next position can be pushed out of the way by the type of this particle. If so, the adjacent particle is moved out of the way using pushParticle() (defined in the Particle class, for use by all Particles). Below are the default behaviors implemented in collide() by the subgroup classes. TODO collision specifics
+                    The collide() method of the Particle is called. The collide() method checks for collisions with the particle in the desired next position. If a particle exists there, each of the subgroup classes defines some behaviors on what to do next. Its behavior is also determined by the canCollide() method, which checks if the type of particle in the next position can be pushed out of the way by the type of this particle. If so, the adjacent particle is moved out of the way using pushParticle() (defined in the Particle class, for use by all Particles). Below are the default behaviors implemented in collide() by the subgroup classes.
                     <ul><br>
                         <li>SolidParticles: The implementation of collide() produces results mainly depending on whether a SolidParticle collides with another solid-like particle (i.e. solid or static) or not. If the cell beneath the SolidParticle’s current position is a liquid or a gas, then the SolidParticle will take the place of the particle below, and push that particle to the side containing free space (or randomly picking a side if both sides are free). However, if the below particle is a solid or static particle, then the current SolidParticle will instead be moved to whichever of the bottom-left or bottom-right cell is free. If they are both free, then one of them is picked randomly. Otherwise, the SolidParticle stays in place.</li><br>
                         <li>StaticParticles: The StaticParticle class does not have its collide() method defined. This is due to the fact that StaticParticles are immovable, and remain in the same place in the grid where they are initially created.</li><br>
@@ -101,7 +101,7 @@
 
         <p><center><img src="images/fire.gif" width="360px"><br><i>Burning behavior of flammable particles</i></center></p>
 
-        <p>TODO bug</p>
+        <p>One bug encountered when implementing fire was caused by making methane flammable, specifically methane not dissappearing and burning forever. Methane particles, when they do not move for a simulation step, decrements its lifetime. However, since fire also decrements lifetime, there was a chance to make the methane particles have a negative lifetime. A lifetime of -1 is the defualt value for lifetime and signals a particle has permanent lifetime. This bug was fixed by performing more checks when decrementing lifetime.</p>
 
         <p>Another main use of the interact() method is to execute special interactions between specific particle types. A good example of this is the interaction between water and lava. When water interacts with lava (and vice versa) we have implemented the behavior of the water cooling the lava into a solid particle, and the lava in turn evaporating the water. Therefore, any time that water comes into contact with lava, both the lava and water particles are removed from the frame (given a lifetime of 0) and a new StoneParticle is instantiated to take their place.</p>
 
@@ -141,6 +141,8 @@
         <p>Another key aspect of our application is the Image Import feature. This feature allows a user to select a picture as a starting state for the simulation, where we map each pixel to a corresponding particle type based on its color. We map each pixel to a particle type by using a least squares approximation to find the particle with the least difference in RGB color. This feature provides a fun experience by highlighting the unique particle interactions from an assortment of different particles at the same time.</p>
 
         <p><center><img src="images/mona_lisa.gif" width="480px"><br><i>Mona Lisa imported as particles</i></center></p>
+
+        <br>
 
     <h3 align="middle">Comparisons to Other Sand Games</h3>
 
@@ -189,7 +191,32 @@
 
     <h2 align="middle">Team Member Contributions</h2>
 
-        <p>TODO</p>
+        <p>Dennis:
+            <ul>
+                <li>Implemented code abstractions in Particle (i.e. simulate, collide, interact methods)
+                <li>Work on the subgroup classes (i.e. SolidParticle, LiquidParticle, etc.) </li>
+                <li>Work on simulation infrastructure, basic simulation loop and ParticleFactory and ParticleTool enum</li>
+                <li>Implemented gas particle (i.e. MethaneParticle, FireParticle), flammability and burning physics</li>
+            </ul>
+        </p>
+
+        <p>Rami:
+            <ul>
+                <li>Built the original foundation of the object oriented design, and helped improve it to include the idea of splitting particles into categories</li>
+                <li>Implemented basic physical behavior of liquid particles</li>
+                <li>Instantiated specific particle classes (i.e. LavaParticle, StoneParticle, etc.)</li>
+                <li>Implemented interaction between lava and water particles</li>
+            </ul>
+        </p>
+
+        <p>Garrett:
+            <ul>
+                <li>Built the user interface, implemented simulation mouse interaction</li>
+                <li>Implemented OpenGL in efficient particle rendering</li>
+                <li>Built the image import feature</li>
+                <li>Contributed to specific particle classes (i.e. WaterParticle, OilParticle)</li>
+            </ul>
+        </p>
 
         <br>
 
