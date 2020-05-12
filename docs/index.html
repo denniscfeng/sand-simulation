@@ -22,7 +22,7 @@
 <body>
 
 <h3 align="middle">CS184 Final Project Report</h3>
-<h1 align="middle"><a href='https://github.com/denniscfeng/sand-simulation'>Sand Simulation Game</a></h1>
+<h1 align="middle">Sand Simulation Game</h1>
 
     <div class="padded">
 
@@ -81,17 +81,33 @@
                 <li>
                     The collide() method of the Particle is called. The collide() method checks for collisions with the particle in the desired next position. If a particle exists there, each of the subgroup classes defines some behaviors on what to do next. Its behavior is also determined by the canCollide() method, which checks if the type of particle in the next position can be pushed out of the way by the type of this particle. If so, the adjacent particle is moved out of the way using pushParticle() (defined in the Particle class, for use by all Particles). Below are the default behaviors implemented in collide() by the subgroup classes. TODO collision specifics
                     <ul><br>
-                        <li>SolidParticles</li><br>
-                        <li>StaticParticles</li><br>
-                        <li>LiquidParticles</li><br>
-                        <li>GasParticles</li><br>
+                        <li>SolidParticles: The implementation of collide() produces results mainly depending on whether a SolidParticle collides with another solid-like particle (i.e. solid or static) or not. If the cell beneath the SolidParticle’s current position is a liquid or a gas, then the SolidParticle will take the place of the particle below, and push that particle to the side containing free space (or randomly picking a side if both sides are free). However, if the below particle is a solid or static particle, then the current SolidParticle will instead be moved to whichever of the bottom-left or bottom-right cell is free. If they are both free, then one of them is picked randomly. Otherwise, the SolidParticle stays in place.</li><br>
+                        <li>StaticParticles: The StaticParticle class does not have its collide() method defined. This is due to the fact that StaticParticles are immovable, and remain in the same place in the grid where they are initially created.</li><br>
+                        <li>LiquidParticles: The collide() method of the LiquidParticle class behaves similarly to the collide() method of the SolidParticle class. The only differences are that LiquidParticles can only push aside GasParticles, and LiquidParticles do not stay in place if the cell to the bottom, bottom-left, and bottom-right are occupied. If all three of those cells are occupied by a non-gas particle, LiquidParticles also check if the cells to the immediate left and right are free or occupied by a GasParticle. If so, the cell moves to the cell to the left or right, or chooses randomly between both of these cells. This creates the effect of “leveling out” that liquids should do naturally. Only if the immediate left and right cells are also occupied will LiquidParticles stay in place.</li><br>
+                        <li>GasParticles: The collide() method in the GasParticle class simply checks if the cell that the GasParticle is attempting to occupy is within the frame, and not currently occupied by another particle of any type. If both of these checks apply, then the GasParticle is free to move to the next cell. Otherwise, the GasParticle stays in place.</li><br>
                     </ul>
+                    <p>The below gif shows the behaviors of the different particle types, as exhibited by the Sand, Water, Wall, and Methane particles.</p>
+                    <p><center><img src="images/naturalPhysics.gif" width="480px"><br><i>Colliding behavior of the particle types</i></center></p>
                 </li><br>
                 <li>The interact() method of Particle is called. The interact() method returns an ArrayList of Particles, and this ArrayList is subsequently returned by simulate(). The purpose of the interact() method is to implement any special behaviors other than movement. For instance, the interact() method usually calls getNeighbors() that gets a map of Particles immediately adjacent to it and their coordinates. Depending on the nearby Particles, this Particle might alter its own parameters or its neighbor Particles’ parameters.</li><br>
             </ol>
         </p>
 
-        <p>TODO flammability</p>
+        <p>One main usage of the interact() method is to implement the flammability of WoodParticle, OilParticle, and MethaneParticle. Every specific particle is given a flammability constant (double) flammable in the range of [0, 1] (most particles have a constant of 0 except for wood, oil and methane). If a fire or lava particle comes into contact with another particle, the fire or lava particle will attempt to set the other particle on fire. If the other particle has a flammability constant flammable that is greater than 0, then the particle has a probability of flammable of being set on fire.</p>
+
+        <p>Once a particle is set on fire, it is given a random (int) lifetime (within the bounds of the particle’s defined (int) minBurnTime and (int) maxBurnTime) which is the amount of time that a particle will burn before it is completely burned out and removed from the frame. Additionally, while a particle is on fire, it has a chance of (double) fireCreateChance of creating new fire particles nearby to set other flammable particles on fire. There are also some special cases with particles burning as well. For example, when a particle burns out, if the particle was a MethaneParticle, then the particle will create an effect similar to an explosion that spawns additional new fire particles. Finally, when water comes into contact with fire or particles on fire, then the fire is extinguished (or given a short lifetime) due to the water.</p>
+
+        <p>The below gif shows the burning and extinguishing behaviors of the flammable particles Methane, Oil, and Wood, along with their extinguishing.</p>
+
+        <p><center><img src="images/fire.gif" width="360px"><br><i>Burning behavior of flammable particles</i></center></p>
+
+        <p>TODO bug</p>
+
+        <p>Another main use of the interact() method is to execute special interactions between specific particle types. A good example of this is the interaction between water and lava. When water interacts with lava (and vice versa) we have implemented the behavior of the water cooling the lava into a solid particle, and the lava in turn evaporating the water. Therefore, any time that water comes into contact with lava, both the lava and water particles are removed from the frame (given a lifetime of 0) and a new StoneParticle is instantiated to take their place.</p>
+
+        <p><center><img src="images/lava.gif" width="360px"><br><i>Water falling into lava and forming stone particles</i></center></p>
+
+        <p>In this specific implementation of the interaction between lava and water, a bug was encountered. After removing particles from the frame, the simulation was still led to believe that the cells that contained those removed particles originally were still occupied. This caused stone particles to not be instantiated and created gaps in the simulation. This bug was due to the structure of our code. We had an (ArrayList) ParticleList that held all our currently spawned particles, and the ParticleGrid displayed the particles in the list on the frame. However, particle classes initially could only access the ParticleGrid, and not the ParticleList, and only removing particles from the ParticleGrid was not enough since the particles removed were still in the ParticleList, forcing the ParticleGrid to believe that the removed particles still existed. After some restructuring, especially with the implementation of fire effects and the setting of the lifetime of particles, we were able to remove the water and lava particles from, and add the stone particle to, both the ParticleGrid and the ParticleList, thereby resolving the bug.</p>
 
         <p>The Particle class was the center of attention during our work. Although there are some places that can still be organized for even more extensibility, complexity and readability are still also concerns in a group project such as this one. In the end, everyone contributed to various separate aspects of the Particle classes, and we learned a lot about design patterns and how to run a codebase, from spotting abstractions in existing code to planning future code.</p>
 
@@ -103,19 +119,58 @@
 
         <p>An initial bug we ran into was the simulation rendering differently on Windows and Mac operating systems. On Windows, each particle was significantly smaller and not aligned with the GLCanvas frame. After extensive debugging and online research, we discovered that Mac and Windows displays differed in their Dots per Inch (DPI) value. To solve this, we correctly accounted for this and properly scaled our GLCanvas to render the same on any machine, independent of DPI value.</p>
 
-        <p>Color choice was also another key aspect of creating an aesthetically pleasing and realistic simulation. For each Particle type we defined a static list of Color’s, and for each Particle instance, we deterministically select a specific index in the Color List to render for that specific particle. The resulting image gives an appearance of texture that a solid color for all particles could not depict.</p>
+        <p><center><img src="images/dpi_bug.png" width="360px"><br><i>(Bug) Early image of JOGL high-DPI bug</i></center></p>
+
+        <p>Color choice was also another key aspect of creating an aesthetically pleasing and realistic simulation. For each Particle type we defined a static list of Color’s, and for each Particle instance, we deterministically select a specific index in the Color List to render for that specific particle. The resulting image gives an appearance of texture that a solid color for all particles could not depict. Below is a visual comparison of sand and water as seen in our milestone and after color variation.</p>
+
+        <div align="middle">
+          <table style="width=100%">
+            <tr>
+              <td>
+                <img src="images/simulation.gif" align="top" width="360px"/>
+                <figcaption align="middle"><i>Early gif of sand and water with solid color</i></figcaption>
+              </td>
+              <td>
+                <img src="images/sand_texture.png" align="top" width="360px"/>
+                <figcaption align="middle"><i>Later sand and and water color with color variation</i></figcaption>
+              </td>
+            </tr>
+          </table>
+        </div>
 
         <p>Another key aspect of our application is the Image Import feature. This feature allows a user to select a picture as a starting state for the simulation, where we map each pixel to a corresponding particle type based on its color. We map each pixel to a particle type by using a least squares approximation to find the particle with the least difference in RGB color. This feature provides a fun experience by highlighting the unique particle interactions from an assortment of different particles at the same time.</p>
 
+        <p><center><img src="images/mona_lisa.gif" width="480px"><br><i>Mona Lisa imported as particles</i></center></p>
+
     <h3 align="middle">Comparisons to Other Sand Games</h3>
 
-        <p>A lot of our inspiration for particle interactions and overall simulation mechanics came from other popular, browser-based sand simulators. <a href='https://sandspiel.club'>https://sandspiel.club</a> and <a href='https://dan-ball.jp/en/javagame/dust/'>https://dan-ball.jp/en/javagame/dust/</a> specifically, also implement the same interactions between lava and water creating stone, and most of our other particles. However, each of these apps lack an initial starting state that we implement with the image import feature. TODO flesh out more</p>
+        <p>A lot of our inspiration for particle interactions and overall simulation mechanics came from other popular, browser-based sand simulators. <a href='https://sandspiel.club'>https://sandspiel.club</a> and <a href='https://dan-ball.jp/en/javagame/dust/'>https://dan-ball.jp/en/javagame/dust/</a> specifically, also implement the same interactions between lava and water creating stone, and most of our other particles.</p>
+
+        <p>Other than having a wider variety of particles, both of these sand games also handle fluid and smoke simulation when gasses and explosions are caused by certain particles, such as smoke billowing off of fire. This happens alongside the particle simulation and in both of these simulations can actually cause particles to blow around. This is actually one of our reach goals that is a good direction to improve our own simulation should we wish to continue working on it.</p>
+
+        <p>Furthermore, Sandspiel in particular runs at a very smooth, constant framerate, even when the screen is filled with particles. Sandspiel uses web assembly and WebGL that runs very quickly, and inspired us to implement OpenGL in our simulation from the beginning of the project. Our simulation still slows down when importing images or otherwise simulating an almost-full amount of particles.</p>
+
+        <p>Both of these apps lack the ability to import an image as a starting state, which we implemented. Sandspiel has a share feature, which we considered implementing by allowing the simulation to export the particles onscreen as an image, which could be later imported. This is also another interesting feature that can be implemented in the future.</p>
 
         <br>
 
     <h2 align="middle">Results</h2>
 
-        <p>TODO</p>
+        <p>Our results are summarized in our <a href='https://youtu.be/ZGXMJLRKgZo'>final demo video</a> below.</p>
+
+        <center><iframe width="560" height="315" src="https://www.youtube.com/embed/ZGXMJLRKgZo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+
+        <p>Our code repository is viewable <a href='https://github.com/denniscfeng/sand-simulation'>on GitHub</a>.</p>
+
+        <p>In terms of benchmarking our performance, we usually achieve a framerate of around 50 frames per second. While importing images as particles, filling the screen with particles, setting fire to a large amount of particles, and lava meeting water to produce stone, the simulation can bog down. In these circumstances, the frame rate can dip to around 20 frames per second.</p>
+
+        <p>Below are some more results captured throughout our development.</p>
+
+        <p><center><img src="images/density.gif" width="480px"><br><i>"Density experiment" showing sand sinking beneath water and oil floating on top of water</i></center></p>
+
+        <p><center><img src="images/methane_box.gif" width="480px"><br><i>Lava particles have a chance to emit fire particles as "embers", setting other things on fire</i></center></p>
+
+        <p><center><img src="images/sand_pouring.png" width="480px"><br><i>Early test of mixing water and sand</i></center></p>
 
         <br>
 
