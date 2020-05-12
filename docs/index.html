@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 50px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS184 Final Project Report - Sand Simulation Game</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+
+<h3 align="middle">CS184 Final Project Report</h3>
+<h1 align="middle"><a href='https://github.com/denniscfeng/sand-simulation'>Sand Simulation Game</a></h1>
+
+    <div class="padded">
+
+    <h3 align="middle">Dennis Feng, Garrett Wesley, Rami Mostafa</h3>
+
+    <br>
+
+    <p><center><img src="images/team2.gif" width="480px"><br><i>Simulation interface</i></center></p>
+
+    <br>
+
+    <h2 align="middle">Abstract</h2>
+
+        <p>We created a two-dimensional, particle-based sand simulation game from scratch using Java. The game simulates particles falling and colliding with each other and, in addition to solid particles like sand, we implemented a variety of different particle types, such as static particles, liquid particles, and gas particles. Different particle types collide and interact with each other in different ways. We designed the simulation for extensibility and abstraction, and used object oriented methodologies such as abstract classes in order to create unique particles like wood, oil, lava, water, fire, and methane that extend the basic static, solid, liquid, and gas particle types. This also allows us to implement unique properties and interactions between particles, such as flammability of oil, wood, and methane. For our graphics, we used the Java OpenGL library (JOGL) in order to render each frame of the simulation into our interface efficiently. Our UI uses Java Swing, and the user clicks in the frame to place particles, choose particle type, and change brush size. We also implemented the additional feature of importing an image as particles into the simulation.</p>
+
+    <br>
+
+    <h2 align="middle">Technical Approach</h2>
+
+        <p>The technical approaches used in our simulation can be roughly broken down into the basic simulation loop, the object oriented design of the various particle types, and our graphics and user interface API.</p>
+
+    <h3 align="middle">Simulation Loop</h3>
+
+        <p>The simulation simulates the motions of particles in a grid. Every particle is a Particle type object, and the grid is a two dimensional array of Particles (particleGrid). Each particle can occupy one space on the grid and each grid space contains one particle. An ArrayList of Particles (particleList) keeps track of every particle on screen, and is updated if particles are removed or added.</p>
+
+        <p>The simulation runs through a permanent while loop, and every iteration of the loop is a simulation step, during which every particle is simulated. This is done by calling each Particle’s simulate() method. Particles, depending on their defined movements and interactions within simulate(), are moved around or altered at every simulation step. The simulate() method’s primary function is to update each Particle’s next position in the form of two integers nextRow and nextCol. After calling every Particle’s simulate(), we call every Particle’s updatePosition() that reassigns its new grid space to itself, and updates its own position parameters row and col.</p>
+
+        <p>After every simulation step, a method is called from our custom Swing JPanel to render the frame and display it in our UI. The loop is time-gated so that our simulation refreshes at a maximum rate of 60 frames per second. This is done by measuring the system time as the loop runs and sleeping the simulation if there is time left until the next frame is needed.</p>
+
+        <p>At each step, if the mouse is being clicked, we calculate the grid position of the mouse, and the particleGrid’s spawnParticles() method, which creates new particles of the given enum (particleTool) type, in a square of size brushWidth on the grid--as long as an existing particle does not exist in a grid space. The ParticleFactory class handles the creation of the particleTool type of particle. Both the particleTool and brushWidth are set by the UI. Erasing particles in the square and clearing the entire grid are also supported by particleTool.</p>
+
+        <p>As we implemented more complex interactions, we implemented finite lifetime Particles, which are particles that disappear after a number of simulation steps. Thus, we added a check during our simulate() calls that removes the Particle from the particleGrid and places it in an ArrayList (particleRemoveList) that is used to remove those particles from particleList. Furthermore, as we implemented behaviors such as burning, we allowed simulate() calls from Particles to return ArrayLists of newly created Particles. These are appended to a particleAddList, which is then appended to the particleList.</p>
+
+        <p>One bug we initially encountered was particles being created in the square of specified size, but then immediately “fanning out” to create an extremely dense area of Particles on the grid. We determined this was caused by not checking for Particles being created on top of one another, which resulted in Particles getting pushed out to the sides. We resolved this by not spawning particles in occupied spaces.</p>
+
+        <p><center><img src="images/fan_out_bug.png" width="360px"><br><i>(Bug) Particle "fan out" compared to brush width</i></center></p>
+
+        <p>Another bug we encountered and eventually resolved was the creation of “bars” of sand that extended outwards from a collapsing sand pile. It appeared as though the sand in that row was getting pushed outward by each sand in the row and falling down all simultaneously at every step. We resolved this by randomizing the simulation order of Particles, and the particleList is shuffled before being looped through at each step. Later on, we also implemented the separation of the function of simulate() (which originally calculated the next coordinates, updated the Particle’s coordinates, and moved the particle’s position in the grid) to computing a Particle’s next coordinates only, and having another Particle method updatePosition() to update Particle coordinates and moved its position on the grid. This would’ve also worked to reduce this “sand bar” effect.</p>
+
+        <p><center><img src="images/sand_bar_bug.png" width="360px"><br><i>(Bug) "Bars" of particles being formed as they fall</i></center></p>
+
+    <h3 align="middle">Object Oriented Design</h3>
+
+        <p>The Particle abstract class is the basis for all the types of Particles in the simulation. The main “subgroups” of Particles are the abstract SolidParticle, StaticParticle, LiquidParticle, and GasParticle classes. All the implementations of these “subgroup classes” extend from these abstract classes and inherit--and sometimes override--behaviors defined by them. The diagram below shows all of the Particle classes that we implemented and their inheritances.</p>
+
+        <p><center><img src="images/class_diagram.png" width="480px"><br><i>Particle classes inheritence diagram</i></center></p>
+
+        <p>The Particle class defines all the variables and methods that are inherited or overridden by the child classes. The most important methods of the Particle class are the simulate() and updatePosition() methods which calculate the next position of the Particle and reassign its position on the grid, respectively. Most methods are abstract--such as simulate()--but others--such as updatePosition()--are defined directly in Particle.</p>
+
+        <p>The parameters defined for each particle include its position (int row, int col), its next calculated position (int nextRow, int nextCol) and its RGB Color. Later on, we added parameters--such as lifetime and flammability--which have default values that are overridden by some classes. Finally, every particle stores (a pointer to) the particleGrid that it is placed in and (a Pointer to) a Random object used for random number generation.</p>
+
+        <p>
+            The simulate() method is defined by the abstract subgroup classes, and some . The primary function of simulate() is to define the movement of each of these particles. Below are the steps taken by the simulate() method, regardless of which class has defined it.
+            <ol>
+                <li>The next position is set to the Particle’s preferred next position. For solids and liquids, the next position is the grid space underneath its current position. For gasses, the particle can move randomly up, down, left, or right with a slightly higher probability of up. For static particles, the particle stays where it is.</li><br>
+                <li>
+                    The collide() method of the Particle is called. The collide() method checks for collisions with the particle in the desired next position. If a particle exists there, each of the subgroup classes defines some behaviors on what to do next. Its behavior is also determined by the canCollide() method, which checks if the type of particle in the next position can be pushed out of the way by the type of this particle. If so, the adjacent particle is moved out of the way using pushParticle() (defined in the Particle class, for use by all Particles). Below are the default behaviors implemented in collide() by the subgroup classes. TODO collision specifics
+                    <ul><br>
+                        <li>SolidParticles</li><br>
+                        <li>StaticParticles</li><br>
+                        <li>LiquidParticles</li><br>
+                        <li>GasParticles</li><br>
+                    </ul>
+                </li><br>
+                <li>The interact() method of Particle is called. The interact() method returns an ArrayList of Particles, and this ArrayList is subsequently returned by simulate(). The purpose of the interact() method is to implement any special behaviors other than movement. For instance, the interact() method usually calls getNeighbors() that gets a map of Particles immediately adjacent to it and their coordinates. Depending on the nearby Particles, this Particle might alter its own parameters or its neighbor Particles’ parameters.</li><br>
+            </ol>
+        </p>
+
+        <p>TODO flammability</p>
+
+        <p>The Particle class was the center of attention during our work. Although there are some places that can still be organized for even more extensibility, complexity and readability are still also concerns in a group project such as this one. In the end, everyone contributed to various separate aspects of the Particle classes, and we learned a lot about design patterns and how to run a codebase, from spotting abstractions in existing code to planning future code.</p>
+
+    <br>
+
+    <h3 align="middle">Graphics and Interface</h3>
+
+        <p>The key technique to efficiently rendering 10,000+ moving particles at a stable 50 fps is to do all of the hard work in the GPU. We decided to use the Java OpenGL library (JOGL) to leverage the hardware acceleration benefits that OpenGl provides to speed up our rendering as it is very computationally expensive. All of our particle rendering takes place in our SandDisplayPanel class which extends a Java Swing JFrame. We embed a GLCanvas inside of this JFRame and set its size to expand to the same size as the parent. Inside of our main display() method, we iterate over each Particle in our particleList, and use a helper function to leverage OpenGL shaders to render each particle in its respective row and column value. We were not able to implement it in time, but this process is easily parallelizable as rendering each particle is independent from each other.</p>
+
+        <p>An initial bug we ran into was the simulation rendering differently on Windows and Mac operating systems. On Windows, each particle was significantly smaller and not aligned with the GLCanvas frame. After extensive debugging and online research, we discovered that Mac and Windows displays differed in their Dots per Inch (DPI) value. To solve this, we correctly accounted for this and properly scaled our GLCanvas to render the same on any machine, independent of DPI value.</p>
+
+        <p>Color choice was also another key aspect of creating an aesthetically pleasing and realistic simulation. For each Particle type we defined a static list of Color’s, and for each Particle instance, we deterministically select a specific index in the Color List to render for that specific particle. The resulting image gives an appearance of texture that a solid color for all particles could not depict.</p>
+
+        <p>Another key aspect of our application is the Image Import feature. This feature allows a user to select a picture as a starting state for the simulation, where we map each pixel to a corresponding particle type based on its color. We map each pixel to a particle type by using a least squares approximation to find the particle with the least difference in RGB color. This feature provides a fun experience by highlighting the unique particle interactions from an assortment of different particles at the same time.</p>
+
+    <h3 align="middle">Comparisons to Other Sand Games</h3>
+
+        <p>A lot of our inspiration for particle interactions and overall simulation mechanics came from other popular, browser-based sand simulators. <a href='https://sandspiel.club'>https://sandspiel.club</a> and <a href='https://dan-ball.jp/en/javagame/dust/'>https://dan-ball.jp/en/javagame/dust/</a> specifically, also implement the same interactions between lava and water creating stone, and most of our other particles. However, each of these apps lack an initial starting state that we implement with the image import feature. TODO flesh out more</p>
+
+        <br>
+
+    <h2 align="middle">Results</h2>
+
+        <p>TODO</p>
+
+        <br>
+
+    <h2 align="middle">References</h2>
+
+        <ul>
+            <li><a href='https://towardsdatascience.com/opengl-in-java-how-to-use-hardware-acceleration-676334f18f11'>https://towardsdatascience.com/opengl-in-java-how-to-use-hardware-acceleration-676334f18f11</a> (OpenGL implementation)</li>
+            <li><a href='https://towardsdatascience.com/opengl-in-java-pipelines-shaders-907f137c5bd5'>https://towardsdatascience.com/opengl-in-java-pipelines-shaders-907f137c5bd5</a> (OpenGL Shaders)</li>
+            <li><a href='https://jogamp.org/wiki/index.php/Jogl_Tutorial'>https://jogamp.org/wiki/index.php/Jogl_Tutorial</a> (JOGL site)</li>
+            <li><a href='https://docs.oracle.com/javase/tutorial/uiswing/layout/index.html'>https://docs.oracle.com/javase/tutorial/uiswing/layout/index.html</a> (UI Layout manager)</li>
+            <li><a href='https://sandspiel.club'>https://sandspiel.club</a> (Sandspiel)</li>
+            <li><a href='https://dan-ball.jp/en/javagame/dust/'>https://dan-ball.jp/en/javagame/dust/</a> (Powder Game)</li>
+        </ul>
+
+        <br>
+
+    <h2 align="middle">Team Member Contributions</h2>
+
+        <p>TODO</p>
+
+        <br>
+
+    </div>
+
+</body>
+</html>
+
+
+
+
